@@ -749,3 +749,82 @@ void Robot::walkToPoint(cv::Point2f point, View& view1)
 
 
 }
+
+void Robot::showoff(View& view1)
+{
+    int wait = 500;
+
+    restart(Point3f(0, 17 ,100), Point3f(0,0,0));
+
+    move(Point3f(2,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(-4,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(2,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,0,2));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,0,-4));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,0,2));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,3,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,-6,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    move(Point3f(0,3,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,0.1,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,-0.2,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,0.1,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0.1,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(-0.2,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0.1,0,0));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,0,0.2));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,0,-0.4));
+    view1.update('b', *this);
+    waitKey(wait);
+
+    rotate(Point3f(0,0,0.2));
+    view1.update('b', *this);
+    waitKey(wait);
+}

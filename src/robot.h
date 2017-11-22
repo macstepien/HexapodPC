@@ -47,6 +47,8 @@ class Robot
         void walkRot3C(float angle, View& view1);
 
         void walkToPoint(cv::Point2f point, View& view1);
+
+        void showoff(View& view1);
         
 
 };

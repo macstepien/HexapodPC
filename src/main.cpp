@@ -226,10 +226,10 @@ int main(int argc, char** argv)
             switch(key)
             {
                 case 'D':
-                    rob.walkAsym(Point3f(walkStep,0,0), view1);
+                    rob.walk3C(Point3f(walkStep,0,0), view1);
                     break;
                 case 'A':
-                    rob.walkAsym(Point3f(-walkStep,0,0), view1);
+                    rob.walk3C(Point3f(-walkStep,0,0), view1);
                     break;
                 case 'W':
                     rob.walkAsym(Point3f(0,0,walkStep), view1);
@@ -254,6 +254,13 @@ int main(int argc, char** argv)
         	Point2f pkt;
         	cin >> pkt.x >> pkt.y;
         	rob.walkToPoint(pkt, view1);
+        	mode = 7;
+        }
+        else if(mode == 9)
+        {
+
+        	////SHOWOFFF
+        	rob.showoff(view1);
         	mode = 7;
         }
 
@@ -282,6 +289,9 @@ int main(int argc, char** argv)
             	break;
             case '8':
             	mode = 8;
+            	break;
+            case '9':
+            	mode = 9;
             	break;
         }
         view1.update(key, rob);
