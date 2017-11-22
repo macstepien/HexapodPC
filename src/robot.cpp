@@ -19,6 +19,7 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
     initAngles = angles;
     walkingStep = 0;
     delayLong = 500;
+    delayShort = 2;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
     lFrame.dr = Point3f(width/2,0,-length/2);
@@ -494,7 +495,7 @@ void Robot::walk2C(Point3f steps, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(1);
+        waitKey(delayShort);
     }
 
     for (double i = 0; i < z; i += di)
@@ -513,7 +514,7 @@ void Robot::walk2C(Point3f steps, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(1);
+        waitKey(delayShort);
     }
 }
 
@@ -564,7 +565,7 @@ void Robot::walk3C(Point3f steps, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(5);
+        waitKey(delayShort);
     }
 
     for (double i = 0; i < x2; i += di)
@@ -584,7 +585,7 @@ void Robot::walk3C(Point3f steps, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(5);
+        waitKey(delayShort);
     }
 }
 
@@ -656,7 +657,7 @@ void Robot::walkRot3C(float angle, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(5);
+        waitKey(delayShort);
     }
 
     for (int k = 1; k < 6; k += 2)
@@ -684,6 +685,6 @@ void Robot::walkRot3C(float angle, View& view1)
 
         view1.update('b', *this);
 
-        waitKey(5);
+        waitKey(delayShort);
     }
 }
