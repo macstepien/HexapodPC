@@ -13,13 +13,12 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
     width = width1;
     length = length1;
 
-    restart();
-
     for(int i = 0; i < 6; ++i)
     {
         legs[i].setLengths(leglengths);
-        legs[i].initJointPoints();
     }
+
+    restart(pos, ang);
 }
 
 void Robot::restart(cv::Point3f pos, cv::Point3f ang)
@@ -32,7 +31,6 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
     walkingStep = 0;
     delayLong = 500;
     delayShort = 2;
-    firstStep = true;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
     lFrame.dr = Point3f(width/2,0,-length/2);
@@ -47,37 +45,32 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
     Point3f ang1(0.0 ,0.0 ,CV_PI/2);
 
     legs[0].setJointA(lFrame.ur);
-    legs[0].setAgnles(ang1);
     legs[0].setSignals(Point3f(5900,5140,4960));
     legs[0].setServos(Point3i(3,4,5));
 
     legs[1].setJointA((lFrame.ur+lFrame.dr)/2);
-    legs[1].setAgnles(ang1);
     legs[1].setSignals(Point3f(5900,5200,5020));
     legs[1].setServos(Point3i(9,10,11));
 
     legs[2].setJointA(lFrame.dr);
-    legs[2].setAgnles(ang1);
     legs[2].setSignals(Point3f(6160,5080,5160));
     legs[2].setServos(Point3i(15,16,17));
 
     legs[3].setJointA(lFrame.ul);
-    legs[3].setAgnles(ang1);
     legs[3].setSignals(Point3f(6080,5320,4700));
     legs[3].setServos(Point3i(0,1,2));
 
     legs[4].setJointA((lFrame.ul+lFrame.dl)/2);
-    legs[4].setAgnles(ang1);
     legs[4].setSignals(Point3f(6100,4820,5020));
     legs[4].setServos(Point3i(6,7,8));
 
     legs[5].setJointA(lFrame.dl);
-    legs[5].setAgnles(ang1);
     legs[5].setSignals(Point3f(6100,5080,4920));
     legs[5].setServos(Point3i(12,13,14));
 
     for(int i = 0; i < 6; ++i)
     {
+        legs[i].setAgnles(ang1);
         legs[i].initJointPoints();
     }
 }
