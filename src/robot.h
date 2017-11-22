@@ -21,7 +21,9 @@ class Robot
         void moveCoordinates(cv::Point3f p, cv::Point3f ang);
         int walkingStep;
         cv::Point3f stepsl[6];
-        int delayLong; //delay between each step in walk
+        int delayLong; //delay between each step in function walk
+        int delayShort; //delay used between each iteration in walk2C walk3C walkRot3C
+        bool firstStep;
 
     public:
         Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);
@@ -40,6 +42,8 @@ class Robot
         void walkRot2C(float angle, View& view1);
         void walk3C(cv::Point3f steps, View& view1);
         void walkRot3C(float angle, View& view1);
+
+        void walkAsym(cv::Point3f steps, View& view1);
 
 };
 
