@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project( hex )
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 set(OpenCV_INCLUDE_DIRS
 	/usr/local/include
