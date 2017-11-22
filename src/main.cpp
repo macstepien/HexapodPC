@@ -45,6 +45,7 @@ int main(int argc, char** argv)
     bool walking = false;
 
     float walkStep = 5;
+    float rotateStep = 0.3;
 
     ///Tryby:
     ///1 - stanie w miejscu i ruch translacyjny
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
     ///5 - automatyczne z poprawioną płynnością
     ///6 - automatyczne z płynnym chodzeniem do przodu i zakręcaniem
 
-    int mode = 6;
+    int mode = 7;
         
 	while(key != 27)
     {
@@ -156,10 +157,10 @@ int main(int argc, char** argv)
                     rob.walkC(Point3f(0,0,-walkStep), view1);
                     break;
                 case 'E':
-                    rob.walkRotC(0.18, view1);
+                    rob.walkRotC(rotateStep, view1);
                     break;
                 case 'Q':
-                    rob.walkRotC(-0.18, view1);
+                    rob.walkRotC(-rotateStep, view1);
                     break;
                 case 'R':
                     rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
@@ -183,10 +184,10 @@ int main(int argc, char** argv)
                     rob.walk2C(Point3f(0,0,-walkStep), view1);
                     break;
                 case 'E':
-                    rob.walkRotC(0.18, view1);
+                    rob.walkRotC(rotateStep, view1);
                     break;
                 case 'Q':
-                    rob.walkRotC(-0.18, view1);
+                    rob.walkRotC(-rotateStep, view1);
                     break;
                 case 'R':
                     rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
@@ -210,15 +211,50 @@ int main(int argc, char** argv)
                     rob.walk3C(Point3f(0,0,-walkStep), view1);
                     break;
                 case 'E':
-                    rob.walkRot3C(0.18, view1);
+                    rob.walkRot3C(rotateStep, view1);
                     break;
                 case 'Q':
-                    rob.walkRot3C(-0.18, view1);
+                    rob.walkRot3C(-rotateStep, view1);
                     break;
                 case 'R':
                     rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
                     break;
             }
+        }
+        else if(mode == 7)
+        {
+            switch(key)
+            {
+                case 'D':
+                    rob.walkAsym(Point3f(walkStep,0,0), view1);
+                    break;
+                case 'A':
+                    rob.walkAsym(Point3f(-walkStep,0,0), view1);
+                    break;
+                case 'W':
+                    rob.walkAsym(Point3f(0,0,walkStep), view1);
+                    break;
+                case 'S':
+                    rob.walkAsym(Point3f(0,0,-walkStep), view1);
+                    break;
+                case 'E':
+                    rob.walkRot3C(rotateStep, view1);
+                    break;
+                case 'Q':
+                    rob.walkRot3C(-rotateStep, view1);
+                    break;
+                case 'R':
+                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
+                    break;
+            }
+        }
+        else if(mode == 8)
+        {
+        	cout << "Podaj wspolrzedne: ";
+        	Point2f pkt;
+        	cin >> pkt.x >> pkt.y;
+        	rob.walkToPoint(pkt, view1);
+        	mode = 7;
         }
 
         switch(key)
@@ -241,6 +277,12 @@ int main(int argc, char** argv)
             case '6':
                 mode = 6;
                 break;
+            case '7':
+            	mode = 7;
+            	break;
+            case '8':
+            	mode = 8;
+            	break;
         }
         view1.update(key, rob);
         key = waitKey(10);

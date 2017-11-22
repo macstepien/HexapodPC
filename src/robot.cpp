@@ -30,7 +30,8 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
     initAngles = angles;
     walkingStep = 0;
     delayLong = 500;
-    delayShort = 2;
+    delayShort = 10;
+    firstStep = true;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
     lFrame.dr = Point3f(width/2,0,-length/2);
@@ -633,7 +634,27 @@ void Robot::walkRot3C(float angle, View& view1)
 
 void Robot::walkAsym(cv::Point3f steps, View& view1)
 {
-    
+    int legOrder[6];
+    if(firstStep)
+    {
+        legOrder[0] = 0;
+        legOrder[1] = 4;
+        legOrder[2] = 2;
+        legOrder[3] = 3;
+        legOrder[4] = 1;
+        legOrder[5] = 5;
+        firstStep = false;
+    }
+    else
+    {
+        legOrder[0] = 3;
+        legOrder[1] = 1;
+        legOrder[2] = 5;
+        legOrder[3] = 0;
+        legOrder[4] = 4;
+        legOrder[5] = 2;
+        firstStep = true;
+    }
 
     Point3f steps1 = steps;
     float x = steps1.x;
@@ -663,16 +684,14 @@ void Robot::walkAsym(cv::Point3f steps, View& view1)
 
     for (double i = 0; i < x2; i += di)
     {
-        //steps = Point3f(dx, 2*a*i*di-a*x2*di, dz);
-        steps = Point3f(dx, -(legs[0].getJoints().D.y - 16.3) + a*i*(i-x2), dz);
-        legs[0].setLegEnd(legs[0].getJoints().D+steps);
-        legs[0].calculateAngles();
+        
+        steps = Point3f(dx, -(legs[legOrder[0]].getJoints().D.y - 16.3) + a*i*(i-x2), dz);
 
-        legs[4].setLegEnd(legs[4].getJoints().D+steps);
-        legs[4].calculateAngles();
-
-        legs[2].setLegEnd(legs[2].getJoints().D+steps);
-        legs[2].calculateAngles();
+        for(int j = 0; j < 3; ++j)
+        {
+            legs[legOrder[j]].setLegEnd(legs[legOrder[j]].getJoints().D+steps);
+            legs[legOrder[j]].calculateAngles();
+        }
 
         move(Point3f(dx/2,0,dz/2));
 
@@ -683,16 +702,14 @@ void Robot::walkAsym(cv::Point3f steps, View& view1)
 
     for (double i = 0; i < x2; i += di)
     {
-        //steps = Point3f(dx, 2*a*i*di-a*x2*di, dz);
-        steps = Point3f(dx, -(legs[3].getJoints().D.y - 16.3) + a*i*(i-x2), dz);
-        legs[3].setLegEnd(legs[3].getJoints().D+steps);
-        legs[3].calculateAngles();
+        
+        steps = Point3f(dx, -(legs[legOrder[3]].getJoints().D.y - 16.3) + a*i*(i-x2), dz);
 
-        legs[1].setLegEnd(legs[1].getJoints().D+steps);
-        legs[1].calculateAngles();
-
-        legs[5].setLegEnd(legs[5].getJoints().D+steps);
-        legs[5].calculateAngles();
+        for(int j = 3; j < 6; ++j)
+        {
+            legs[legOrder[j]].setLegEnd(legs[legOrder[j]].getJoints().D+steps);
+            legs[legOrder[j]].calculateAngles();
+        }
 
         move(Point3f(dx/2,0,dz/2));
 
@@ -700,4 +717,35 @@ void Robot::walkAsym(cv::Point3f steps, View& view1)
 
         waitKey(delayShort);
     }
+}
+
+
+void Robot::walkToPoint(cv::Point2f point, View& view1)
+{
+    float maxStep = 5;
+    float maxRot = 0.3;
+
+    float destAngle = atan2(point.y, point.x);
+    float differenceAngle = destAngle - angles.y;
+
+
+    int rotateTimes = differenceAngle/maxRot;
+
+    for(int i = 0; i < rotateTimes; ++i)
+    {
+        walkRot3C(maxRot, view1);
+    }
+    walkRot3C(differenceAngle-rotateTimes*maxRot, view1);
+
+    float distance = sqrt(point.x*point.x + point.y*point.y);
+
+    int walkTimes = distance/maxStep;
+
+    for(int i = 0; i < walkTimes; ++i)
+    {
+        walkAsym(Point3f(0,0,maxStep), view1);
+    }
+    walkAsym(Point3f(0,0,distance-walkTimes*maxStep), view1);
+
+
 }
