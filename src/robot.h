@@ -21,7 +21,7 @@ class Robot
         void moveCoordinates(cv::Point3f p, cv::Point3f ang);
         int walkingStep;
         cv::Point3f stepsl[6];
-        int delay;
+        int delayLong; //delay between each step in walk
 
     public:
         Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);

@@ -18,7 +18,7 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
     initPosition = position;
     initAngles = angles;
     walkingStep = 0;
-    delay = 500;
+    delayLong = 500;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
     lFrame.dr = Point3f(width/2,0,-length/2);
@@ -82,7 +82,7 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
     initPosition = position;
     initAngles = angles;
     walkingStep = 0;
-    delay = 500;
+    delayLong = 500;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
     lFrame.dr = Point3f(width/2,0,-length/2);
@@ -543,7 +543,7 @@ void Robot::walkRot(float angle)
 
 void Robot::walkC(Point3f steps, View& view1)
 {
-    Point3f steps1 = steps;
+    /*Point3f steps1 = steps;
     steps.x /= 2;
     steps.z /= 2;
 
@@ -562,7 +562,7 @@ void Robot::walkC(Point3f steps, View& view1)
     view1.update('b', *this);
 
     //usleep(500000);
-    waitKey(delay);
+    waitKey(delayLong);
 
     ///2
     steps.y = 2;
@@ -579,7 +579,7 @@ void Robot::walkC(Point3f steps, View& view1)
     view1.update('b', *this);
 
     //usleep(500000);
-    waitKey(delay);
+    waitKey(delayLong);
 
     ///3
     move(steps1);
@@ -587,7 +587,7 @@ void Robot::walkC(Point3f steps, View& view1)
     view1.update('b', *this);
 
     //usleep(500000);
-    waitKey(delay);
+    waitKey(delayLong);
     steps.y = -2;
 
     legs[3].setLegEnd(legs[3].getJoints().D+steps);
@@ -602,7 +602,7 @@ void Robot::walkC(Point3f steps, View& view1)
     view1.update('b', *this);
 
     //usleep(500000);
-    waitKey(delay);
+    waitKey(delayLong);
 
     ///4
     steps.y = 2;
@@ -617,30 +617,49 @@ void Robot::walkC(Point3f steps, View& view1)
     legs[5].calculateAngles();
 
     //usleep(500000);
-    waitKey(delay);
+    waitKey(delayLong);*/
+    walk(steps);
+    view1.update('b', *this);
+    waitKey(delayLong);
+
+    walk(steps);
+    view1.update('b', *this);
+    waitKey(delayLong);
+
+    walk(steps);
+    view1.update('b', *this);
+    waitKey(delayLong);
+
+    walk(steps);
+    view1.update('b', *this);
+    waitKey(delayLong);
+
+    walk(steps);
+    view1.update('b', *this);
+    waitKey(delayLong);
 }
 
 void Robot::walkRotC(float angle, View& view1)
 {
     walkRot(angle);
     view1.update('b', *this);
-    waitKey(delay);
+    waitKey(delayLong);
 
     walkRot(angle);
     view1.update('b', *this);
-    waitKey(delay);
+    waitKey(delayLong);
 
     walkRot(angle);
     view1.update('b', *this);
-    waitKey(delay);
+    waitKey(delayLong);
 
     walkRot(angle);
     view1.update('b', *this);
-    waitKey(delay);
+    waitKey(delayLong);
 
     walkRot(angle);
     view1.update('b', *this);
-    waitKey(delay);
+    waitKey(delayLong);
 }
 
 void Robot::walk2C(Point3f steps, View& view1)
