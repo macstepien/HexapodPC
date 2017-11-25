@@ -14,6 +14,115 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	sRotStep = sRotStep1;
 	defaultRobotPosition = pos;
 	defaultRobotAngles = ang;
+	mode = 7;
+}
+
+void RobotControler::control(char key, View& view1)
+{
+	switch(key)
+    {
+        case '1':
+            mode = 1;
+            break;
+        case '2':
+            mode = 2;
+            break;
+        case '3':
+            mode = 3;
+            break;
+        case '4':
+            mode = 4;
+            break;
+        case '5':
+            mode = 5;
+            break;
+        case '6':
+            mode = 6;
+            break;
+        case '7':
+        	mode = 7;
+        	break;
+        case '8':
+        	mode = 8;
+        	break;
+        case '9':
+        	mode = 9;
+        	break;
+        case 'R':
+        	restart();
+        	break;
+    }
+
+    Point2f pkt;
+    int xMode = 0;
+    int yMode = 0;
+    int rotMode = 0;
+
+    switch(mode)
+    {
+        case 1:
+            moveBase(key);
+            break;
+        case 2:
+            rotateBase(key);
+            break;
+        case 3:
+            xMode = 0;
+            yMode = 0;
+            rotMode = 0;
+            break;
+        case 4:
+            xMode = 1;
+            yMode = 1;
+            rotMode = 1;
+            break;
+        case 5:
+            xMode = 1;
+            yMode = 2;
+            rotMode = 1;
+            break;
+        case 6:
+            xMode = 3;
+            yMode = 3;
+            rotMode = 2;
+            break;
+        case 7:
+            xMode = 3;
+            yMode = 4;
+            rotMode = 2;
+            break;
+        case 8:
+        	cout << "Podaj wspolrzedne: ";
+        	cin >> pkt.x >> pkt.y;
+        	walkToPoint(pkt, view1);
+        	mode = 7;
+        	break;
+        case 9:
+        	showoff(view1);
+    		mode = 7;
+    		break;
+    }
+
+    if(mode >= 3 && mode <= 7)
+    {
+        switch(key)
+        {
+            case 'W':
+            case 'S':
+                walk(yMode,key,view1);
+                break;
+
+            case 'A':
+            case 'D':
+                walk(xMode,key,view1);
+                break;
+            
+            case 'Q':
+            case 'E':
+                rotate(rotMode,key,view1);
+                break;
+        }
+    }
 }
 
 void RobotControler::walk(int mode, char direction, View& view1)
@@ -65,10 +174,10 @@ void RobotControler::rotate(int mode, char direction, View& view1)
 	switch(direction)
 	{
 		case 'Q':
-			angle = rotStep;
+			angle = -rotStep;
 			break;
 		case 'E':
-			angle = -rotStep;
+			angle = rotStep;
 			break;
 		default:
 			cout << "Nieprawidłowy kierunek";

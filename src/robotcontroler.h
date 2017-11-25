@@ -19,6 +19,8 @@ class RobotControler
 		cv::Point3f defaultRobotPosition; //coordinates to which robot will be restarted
 		cv::Point3f defaultRobotAngles; //angles to which robot will be restarted
 
+		int mode;
+
 
 	public:
 		RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);
@@ -51,6 +53,8 @@ class RobotControler
 
 		void walkToPoint(cv::Point2f point, View& view1);
         void showoff(View& view1);
+
+        void control(char key, View& view1);
 };
 
 
