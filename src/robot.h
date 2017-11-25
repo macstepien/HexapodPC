@@ -18,19 +18,22 @@ class Robot
         float width, length;
         cv::Mat Rx, Ry, Rz, R;
         Leg legs[6];
-        void moveCoordinates(cv::Point3f p, cv::Point3f ang);
         int walkingStep;
         cv::Point3f stepsl[6];
         int delayLong; //delay between each step in function walk
         int delayShort; //delay used between each iteration in walk2C walk3C walkRot3C
         bool firstStep;
 
+        void moveCoordinates(cv::Point3f p, cv::Point3f ang);
+
     public:
         Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);
-        cv::Point3f getPosition(){return position;};
-        cv::Point3f getAngles(){return angles;};
+
+        cv::Point3f getPosition() const {return position;};
+        cv::Point3f getAngles() const {return angles;};
         rect getFrame();
         joints getLegJoints(int n);
+
         void restart(cv::Point3f pos, cv::Point3f ang);
 
         void move(cv::Point3f p);
@@ -45,12 +48,6 @@ class Robot
         void walkRot(float angle);
         void walkRotC(float angle, View& view1);
         void walkRot3C(float angle, View& view1);
-
-        void walkToPoint(cv::Point2f point, View& view1);
-
-        void showoff(View& view1);
-        
-
 };
 
 #endif // ROBOT_H
