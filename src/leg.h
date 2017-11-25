@@ -27,17 +27,17 @@ class Leg
         Leg(){};
         Leg(cv::Point3f joint1, cv::Point3f angles1, cv::Point3f lengths1, cv::Point3f signals1);
 
-        joints getJoints(){return legJoints;};
+        joints getJoints() const {return legJoints;};
 
         void initJointPoints();
 
-        void setJointA(cv::Point3f joint1);
-        void setAgnles(cv::Point3f angles1);
-        void setLengths(cv::Point3f lengths1);
-        void setLegEnd(cv::Point3f legEnd1);
-        void setR(cv::Mat R1);
-        void setSignals(cv::Point3f sig);
-        void setServos(cv::Point3i servos1);
+        void setJointA(cv::Point3f joint1) {legJoints.A = joint1;};
+        void setAngles(cv::Point3f angles1) {angles = angles1;};
+        void setLengths(cv::Point3f lengths1) {lengths = lengths1;};
+        void setLegEnd(cv::Point3f legEnd1) {legEnd = legEnd1;};
+        void setR(cv::Mat R1) {R = R1;};
+        void setSignals(cv::Point3f sig) {signals = sig;};
+        void setServos(cv::Point3i servos1) {servos = servos1;};
 
         int calculateAngles();
 };

@@ -71,7 +71,7 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
 
     for(int i = 0; i < 6; ++i)
     {
-        legs[i].setAgnles(ang1);
+        legs[i].setAngles(ang1);
         legs[i].initJointPoints();
     }
 }
