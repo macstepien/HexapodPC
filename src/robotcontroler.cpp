@@ -1,6 +1,11 @@
 #include "robotcontroler.h"
+#include <iostream>
+#include <opencv2/highgui/highgui.hpp>
 
-RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths)
+using namespace cv;
+using namespace std;
+
+RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths)
  : rob(pos, ang, width1, length1, leglengths)
 {
 	walkStep = walkStep1;
@@ -11,26 +16,26 @@ RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep
 	defaultRobotAngles = ang;
 }
 
-void walk(int mode, int direction, View& view1);
+void RobotControler::walk(int mode, int direction, View& view1)
 {
 	Point3f step;
 	switch(direction)
 	{
 		case 0:
-			step = Point3f(walkStep,0,0);
-			break;
-		case 1:
-			step = Point3f(-walkStep,0,0);
-			break;
-		case 2:
 			step = Point3f(0,0,walkStep);
 			break;
-		case 3:
+		case 1:
 			step = Point3f(0,0,-walkStep);
+			break;
+		case 2:
+			step = Point3f(-walkStep,0,0);
+			break;
+		case 3:
+			step = Point3f(walkStep,0,0);
 			break;
 		default:
 			cout << "Nieprawidłowy kierunek" << endl;
-			return 0;
+			return;
 	}
 
 	switch(mode)
@@ -54,9 +59,21 @@ void walk(int mode, int direction, View& view1);
 	
 }
 
-void rotate(int mode, int direction, View& view1)
+void RobotControler::rotate(int mode, int direction, View& view1)
 {
-	float angle = (direction==1)?rotStep:-rotStep;
+	float angle;
+	switch(direction)
+	{
+		case 0:
+			angle = rotStep;
+			break;
+		case 1:
+			angle = -rotStep;
+			break;
+		default:
+			cout << "Nieprawidłowy kierunek";
+			return;
+	}
 
 	switch(mode)
 	{
@@ -72,7 +89,7 @@ void rotate(int mode, int direction, View& view1)
 	}
 }
 
-void moveBase(int direction)
+void RobotControler::moveBase(int direction)
 {
 	Point3f step;
 	switch(direction)
@@ -97,11 +114,12 @@ void moveBase(int direction)
 			break;
 		default:
 			cout << "Nieprawidłowy kierunek" << endl;
-			return 0;
+			return;
 	}
 	rob.move(step);
 }
-void rotateBase(int direction)
+
+void RobotControler::rotateBase(int direction)
 {
 	Point3f rotation;
 	switch(direction)
@@ -126,7 +144,7 @@ void rotateBase(int direction)
 			break;
 		default:
 			cout << "Nieprawidłowy kierunek" << endl;
-			return 0;
+			return;
 	}
 	rob.rotate(rotation);
 }
@@ -134,7 +152,7 @@ void rotateBase(int direction)
 void RobotControler::walkToPoint(cv::Point2f point, View& view1)
 {
     float destAngle = atan2(point.y, point.x);
-    float differenceAngle = destAngle - angles.y;
+    float differenceAngle = destAngle - rob.getAngles().y;
 
     int rotateTimes = differenceAngle/rotStep;
 
@@ -162,74 +180,73 @@ void RobotControler::showoff(View& view1)
     rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
 
     rob.move(Point3f(2,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(-4,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(2,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,0,2));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,0,-4));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,0,2));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,3,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,-6,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.move(Point3f(0,3,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,0.1,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,-0.2,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,0.1,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
-
     rob.rotate(Point3f(0.1,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(-0.2,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0.1,0,0));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,0,0.2));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,0,-0.4));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 
     rob.rotate(Point3f(0,0,0.2));
-    view1.update('b', *rob);
+    view1.update('b', rob);
     waitKey(wait);
 }

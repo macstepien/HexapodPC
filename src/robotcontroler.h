@@ -1,7 +1,9 @@
 #ifndef ROBOTCONTROLER_H
 #define ROBOTCONTROLER_H
 
+#include <opencv2/core/core.hpp>
 #include "robot.h"
+#include "view.h"
 
 class RobotControler
 {
@@ -20,6 +22,8 @@ class RobotControler
 
 	public:
 		RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);
+
+		Robot& getRobot() {return rob;};
 
 		///direction:
 		/// 0 - forward
@@ -43,7 +47,7 @@ class RobotControler
 		void moveBase(int direction); // move only robots base without moving legends
 		void rotateBase(int direction); // rotate only robots base without moving legends
 
-		void reset() {rob.reset(defaultRobotPosition, defaultRobotAngles);}; //resets robot position
+		void restart() {rob.restart(defaultRobotPosition, defaultRobotAngles);}; //resets robot position
 
 		void walkToPoint(cv::Point2f point, View& view1);
         void showoff(View& view1);

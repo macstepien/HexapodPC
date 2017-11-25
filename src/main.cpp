@@ -7,9 +7,7 @@
 #include <memory>
 #include "tcpconnector.h"
 #include "view.h"
-#include "robot.h"
-
-#define SCALE 0.017453
+#include "robotcontroler.h"
 
 using namespace std;
 using namespace cv;
@@ -21,6 +19,12 @@ int main(int argc, char** argv)
     unique_ptr<TCPConnector> connector;
     TCPStream* stream;
 
+    /*unique_ptr<TCPConnector> connector1;
+    TCPStream* stream1;*/
+
+    int len;
+    char line[64];
+
     if(argc < 2)
     {
     	cout << "Tryb bez połączenia z hexapodem"<< endl;
@@ -28,24 +32,34 @@ int main(int argc, char** argv)
     }
     else
     {
-    	cout << "Łączenie z " << argv[1] << endl;
+    	cout << "Łączenie z " << argv[1] << ":8080" << endl;
     	connector = make_unique<TCPConnector>();
    	 	stream = connector->connect(argv[1], 8080);
+
+        /*cout << "Łączenie z " << argv[1] << ":8081" << endl;
+        connector1 = make_unique<TCPConnector>();
+        stream1 = connector1->connect(argv[1], 8081);*/
     }
 
     View view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
 
     char key = 'm';
 
-    Robot rob(Point3f(0, 17 ,100), Point3f(0,0,0), 11.8, 36.5, Point3f(3.7, 5.8, 16.3));
+    Point3f robotPosition(0, 17, 100);
+    Point3f robotAngles(0,0,0);
+    float robotWidth = 11.8;
+    float robotLength = 36.5;
+    Point3f robotLegLenghts(3.7, 5.8, 16.3);
+    float walkStep = 5;
+    float rotStep = 0.3;
+    float sMoveStep = 1;
+    float sRotStep = 0.05;
 
-    float transStep = 1;
-    float rotStep = 0.05;
+    RobotControler rob(walkStep, rotStep, sMoveStep, sRotStep, robotPosition, robotAngles, robotWidth, robotLength, robotLegLenghts);
+    
 
     bool walking = false;
 
-    float walkStep = 5;
-    float rotateStep = 0.3;
 
     ///Tryby:
     ///1 - stanie w miejscu i ruch translacyjny
@@ -56,195 +70,95 @@ int main(int argc, char** argv)
     ///6 - automatyczne z płynnym chodzeniem do przodu i zakręcaniem
 
     int mode = 7;
+    int direction = -1;
+    int xMode = 0;
+    int yMode = 0;
+    int rotMode = 0;
         
 	while(key != 27)
     {
-        if(mode == 1)
+        switch(key)
         {
-            switch(key)
-            {
-                case 'D':
-                    rob.move(Point3f(transStep,0,0));
-                    break;
-                case 'A':
-                    rob.move(Point3f(-transStep,0,0));
-                    break;
-                case 'Q':
-                    rob.move(Point3f(0,0,transStep));
-                    break;
-                case 'E':
-                    rob.move(Point3f(0,0,-transStep));
-                    break;
-                case 'S':
-                    rob.move(Point3f(0,transStep,0));
-                    break;
-                case 'W':
-                    rob.move(Point3f(0,-transStep,0));
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
+            case 'W':
+                direction = 0;
+                break;
+            case 'S':
+                direction = 1;
+                break;
+            
+            case 'A':
+                direction = 2;
+                break;
+            case 'D':
+                direction = 3;
+                break;
+            
+            case 'Q':
+                direction = 5;
+                break;
+            case 'E':
+                direction = 4;
+                break;
+
+            case 'R':
+                rob.restart();
+            
+            default:
+                direction = -1;
         }
-        else if(mode == 2)
+
+        switch(mode)
         {
-            switch(key)
-            {
-                case 'W':
-                    rob.rotate(Point3f(0,rotStep,0));
-                    break;
-                case 'S':
-                    rob.rotate(Point3f(0,-rotStep,0));
-                    break;
-                case 'A':
-                    rob.rotate(Point3f(rotStep,0,0));
-                    break;
-                case 'D':
-                    rob.rotate(Point3f(-rotStep,0,0));
-                    break;
-                case 'Q':
-                    rob.rotate(Point3f(0,0,rotStep));
-                    break;
-                case 'E':
-                    rob.rotate(Point3f(0,0,-rotStep));
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
+            case 1:
+                rob.moveBase(direction);
+                break;
+            case 2:
+                rob.rotateBase(direction);
+                break;
+            case 3:
+                xMode = 0;
+                yMode = 0;
+                rotMode = 0;
+                break;
+            case 4:
+                xMode = 1;
+                yMode = 1;
+                rotMode = 1;
+                break;
+            case 5:
+                xMode = 1;
+                yMode = 2;
+                rotMode = 1;
+                break;
+            case 6:
+                xMode = 3;
+                yMode = 3;
+                rotMode = 2;
+                break;
+            case 7:
+                xMode = 3;
+                yMode = 4;
+                rotMode = 2;
+                break;
+
         }
-        else if(mode == 3)
+        if(mode >= 3 && mode <= 7)
         {
             switch(key)
             {
-                case 'D':
-                    rob.walk(Point3f(walkStep,0,0));
-                    break;
-                case 'A':
-                    rob.walk(Point3f(-walkStep,0,0));
-                    break;
                 case 'W':
-                    rob.walk(Point3f(0,0,walkStep));
-                    break;
                 case 'S':
-                    rob.walk(Point3f(0,0,-walkStep));
+                    rob.walk(yMode,direction,view1);
                     break;
-                case 'Q':
-                    rob.walkRot(0.05);
-                    break;
-                case 'E':
-                    rob.walkRot(-0.05);
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
-        }
-        else if(mode == 4)
-        {
-            switch(key)
-            {
-                case 'D':
-                    rob.walkC(Point3f(walkStep,0,0), view1);
-                    break;
+
                 case 'A':
-                    rob.walkC(Point3f(-walkStep,0,0), view1);
-                    break;
-                case 'W':
-                    rob.walkC(Point3f(0,0,walkStep), view1);
-                    break;
-                case 'S':
-                    rob.walkC(Point3f(0,0,-walkStep), view1);
-                    break;
-                case 'E':
-                    rob.walkRotC(rotateStep, view1);
-                    break;
-                case 'Q':
-                    rob.walkRotC(-rotateStep, view1);
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
-        }
-        else if(mode == 5)
-        {
-            switch(key)
-            {
                 case 'D':
-                    rob.walkC(Point3f(walkStep,0,0), view1);
+                    rob.walk(xMode,direction,view1);
                     break;
-                case 'A':
-                    rob.walkC(Point3f(-walkStep,0,0), view1);
-                    break;
-                case 'W':
-                    rob.walk2C(Point3f(0,0,walkStep), view1);
-                    break;
-                case 'S':
-                    rob.walk2C(Point3f(0,0,-walkStep), view1);
-                    break;
-                case 'E':
-                    rob.walkRotC(rotateStep, view1);
-                    break;
+                
                 case 'Q':
-                    rob.walkRotC(-rotateStep, view1);
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
-        }
-        else if(mode == 6)
-        {
-            switch(key)
-            {
-                case 'D':
-                    rob.walk3C(Point3f(walkStep,0,0), view1);
-                    break;
-                case 'A':
-                    rob.walk3C(Point3f(-walkStep,0,0), view1);
-                    break;
-                case 'W':
-                    rob.walk3C(Point3f(0,0,walkStep), view1);
-                    break;
-                case 'S':
-                    rob.walk3C(Point3f(0,0,-walkStep), view1);
-                    break;
                 case 'E':
-                    rob.walkRot3C(rotateStep, view1);
-                    break;
-                case 'Q':
-                    rob.walkRot3C(-rotateStep, view1);
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
-                    break;
-            }
-        }
-        else if(mode == 7)
-        {
-            switch(key)
-            {
-                case 'D':
-                    rob.walk3C(Point3f(walkStep,0,0), view1);
-                    break;
-                case 'A':
-                    rob.walk3C(Point3f(-walkStep,0,0), view1);
-                    break;
-                case 'W':
-                    rob.walkAsym(Point3f(0,0,walkStep), view1);
-                    break;
-                case 'S':
-                    rob.walkAsym(Point3f(0,0,-walkStep), view1);
-                    break;
-                case 'E':
-                    rob.walkRot3C(rotateStep, view1);
-                    break;
-                case 'Q':
-                    rob.walkRot3C(-rotateStep, view1);
-                    break;
-                case 'R':
-                    rob.restart(Point3f(0, 17 ,100), Point3f(0,0,0));
+                    rob.rotate(rotMode,direction-4,view1);
                     break;
             }
         }
@@ -258,8 +172,6 @@ int main(int argc, char** argv)
         }
         else if(mode == 9)
         {
-
-        	////SHOWOFFF
         	rob.showoff(view1);
         	mode = 7;
         }
@@ -294,11 +206,20 @@ int main(int argc, char** argv)
             	mode = 9;
             	break;
         }
-        view1.update(key, rob);
+
+        view1.update(key, rob.getRobot());
         key = waitKey(10);
 
         if (usingTCP && stream)
         	stream->send(&key,sizeof(key));
+
+        /*if (usingTCP && stream1)
+        {
+
+            len = stream1->receive(line, sizeof(line));
+            line[len] = '\0';
+            cout << line;
+        }*/
     }
     
     return 0;
