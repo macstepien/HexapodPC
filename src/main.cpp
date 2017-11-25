@@ -50,6 +50,7 @@ int main(int argc, char** argv)
     float robotWidth = 11.8;
     float robotLength = 36.5;
     Point3f robotLegLenghts(3.7, 5.8, 16.3);
+    
     float walkStep = 5;
     float rotStep = 0.3;
     float sMoveStep = 1;
@@ -70,50 +71,25 @@ int main(int argc, char** argv)
     ///6 - automatyczne z płynnym chodzeniem do przodu i zakręcaniem
 
     int mode = 7;
-    int direction = -1;
+
     int xMode = 0;
     int yMode = 0;
     int rotMode = 0;
         
 	while(key != 27)
     {
-        switch(key)
-        {
-            case 'W':
-                direction = 0;
-                break;
-            case 'S':
-                direction = 1;
-                break;
+        
+        if(key == 'R')
+            rob.restart();
             
-            case 'A':
-                direction = 2;
-                break;
-            case 'D':
-                direction = 3;
-                break;
-            
-            case 'Q':
-                direction = 5;
-                break;
-            case 'E':
-                direction = 4;
-                break;
-
-            case 'R':
-                rob.restart();
-            
-            default:
-                direction = -1;
-        }
 
         switch(mode)
         {
             case 1:
-                rob.moveBase(direction);
+                rob.moveBase(key);
                 break;
             case 2:
-                rob.rotateBase(direction);
+                rob.rotateBase(key);
                 break;
             case 3:
                 xMode = 0;
@@ -148,17 +124,17 @@ int main(int argc, char** argv)
             {
                 case 'W':
                 case 'S':
-                    rob.walk(yMode,direction,view1);
+                    rob.walk(yMode,key,view1);
                     break;
 
                 case 'A':
                 case 'D':
-                    rob.walk(xMode,direction,view1);
+                    rob.walk(xMode,key,view1);
                     break;
                 
                 case 'Q':
                 case 'E':
-                    rob.rotate(rotMode,direction-4,view1);
+                    rob.rotate(rotMode,key,view1);
                     break;
             }
         }

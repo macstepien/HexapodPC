@@ -16,21 +16,21 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	defaultRobotAngles = ang;
 }
 
-void RobotControler::walk(int mode, int direction, View& view1)
+void RobotControler::walk(int mode, char direction, View& view1)
 {
 	Point3f step;
 	switch(direction)
 	{
-		case 0:
+		case 'W':
 			step = Point3f(0,0,walkStep);
 			break;
-		case 1:
+		case 'S':
 			step = Point3f(0,0,-walkStep);
 			break;
-		case 2:
+		case 'A':
 			step = Point3f(-walkStep,0,0);
 			break;
-		case 3:
+		case 'D':
 			step = Point3f(walkStep,0,0);
 			break;
 		default:
@@ -59,15 +59,15 @@ void RobotControler::walk(int mode, int direction, View& view1)
 	
 }
 
-void RobotControler::rotate(int mode, int direction, View& view1)
+void RobotControler::rotate(int mode, char direction, View& view1)
 {
 	float angle;
 	switch(direction)
 	{
-		case 0:
+		case 'Q':
 			angle = rotStep;
 			break;
-		case 1:
+		case 'E':
 			angle = -rotStep;
 			break;
 		default:
@@ -89,27 +89,27 @@ void RobotControler::rotate(int mode, int direction, View& view1)
 	}
 }
 
-void RobotControler::moveBase(int direction)
+void RobotControler::moveBase(char direction)
 {
 	Point3f step;
 	switch(direction)
 	{
-		case 0:
+		case 'W':
 			step = Point3f(sMoveStep,0,0);
 			break;
-		case 1:
+		case 'S':
 			step = Point3f(-sMoveStep,0,0);
 			break;
-		case 2:
+		case 'A':
 			step = Point3f(0,0,sMoveStep);
 			break;
-		case 3:
+		case 'D':
 			step = Point3f(0,0,-sMoveStep);
 			break;
-		case 4:
+		case 'Q':
 			step = Point3f(0,sMoveStep,0);
 			break;
-		case 5:
+		case 'E':
 			step = Point3f(0,-sMoveStep,0);
 			break;
 		default:
@@ -119,27 +119,27 @@ void RobotControler::moveBase(int direction)
 	rob.move(step);
 }
 
-void RobotControler::rotateBase(int direction)
+void RobotControler::rotateBase(char direction)
 {
 	Point3f rotation;
 	switch(direction)
 	{
-		case 0:
+		case 'W':
 			rotation = Point3f(sRotStep,0,0);
 			break;
-		case 1:
+		case 'S':
 			rotation = Point3f(-sRotStep,0,0);
 			break;
-		case 2:
+		case 'A':
 			rotation = Point3f(0,0,sRotStep);
 			break;
-		case 3:
+		case 'D':
 			rotation = Point3f(0,0,-sRotStep);
 			break;
-		case 4:
+		case 'Q':
 			rotation = Point3f(0,sRotStep,0);
 			break;
-		case 5:
+		case 'E':
 			rotation = Point3f(0,-sRotStep,0);
 			break;
 		default:

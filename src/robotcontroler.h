@@ -30,12 +30,12 @@ class RobotControler
 		/// 1 - backward
 		/// 2 - left
 		/// 3 - right
-		void walk(int mode, int direction, View& view1);
+		void walk(int mode, char direction, View& view1);
 
 		///direction:
 		/// 0 - clockwise
 		///	1 - counterclockwise
-		void rotate(int mode, int direction, View& view1);
+		void rotate(int mode, char direction, View& view1);
 
 		///directions
 		/// 0 - forward
@@ -44,8 +44,8 @@ class RobotControler
 		/// 3 - right
 		/// 4 - up
 		/// 5 - down
-		void moveBase(int direction); // move only robots base without moving legends
-		void rotateBase(int direction); // rotate only robots base without moving legends
+		void moveBase(char direction); // move only robots base without moving legends
+		void rotateBase(char direction); // rotate only robots base without moving legends
 
 		void restart() {rob.restart(defaultRobotPosition, defaultRobotAngles);}; //resets robot position
 
