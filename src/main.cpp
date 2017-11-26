@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string>
 #include <memory>
+#include <thread>
 #include "tcpconnector.h"
 #include "view.h"
 #include "robotcontroler.h"
@@ -12,6 +13,26 @@
 using namespace std;
 using namespace cv;
 
+void battery(bool communication, char* adres, bool* end)
+{
+    if(!communication)
+        return;
+
+    int len;
+    char line[64];
+
+    unique_ptr<TCPConnector> connector1;
+    TCPStream* stream1;
+    cout << "Łączenie z " << adres << ":8081" << endl;
+    connector1 = make_unique<TCPConnector>();
+    stream1 = connector1->connect(adres, 8081);
+    while(stream1 && !(*end))
+    {
+        len = stream1->receive(line, sizeof(line));
+        line[len] = '\0';
+        cout << line << endl;
+    }
+}
 
 int main(int argc, char** argv)
 {
@@ -24,6 +45,7 @@ int main(int argc, char** argv)
 
     int len;
     char line[64];
+    bool end = false;
 
     if(argc < 2)
     {
@@ -40,6 +62,7 @@ int main(int argc, char** argv)
         connector1 = make_unique<TCPConnector>();
         stream1 = connector1->connect(argv[1], 8081);*/
     }
+    thread t1 {battery, argc>=2, argv[1], &end};
 
     View view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
 
@@ -83,6 +106,8 @@ int main(int argc, char** argv)
             cout << line;
         }*/
     }
+    end = true;
+    t1.join();
     
     return 0;
 }
