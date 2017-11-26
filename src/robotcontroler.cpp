@@ -143,7 +143,7 @@ void RobotControler::walk(int mode, char direction, View& view1)
 			step = Point3f(walkStep,0,0);
 			break;
 		default:
-			cout << "Nieprawidłowy kierunek" << endl;
+			//cout << "Nieprawidłowy kierunek" << endl;
 			return;
 	}
 
@@ -180,7 +180,7 @@ void RobotControler::rotate(int mode, char direction, View& view1)
 			angle = rotStep;
 			break;
 		default:
-			cout << "Nieprawidłowy kierunek";
+			//cout << "Nieprawidłowy kierunek";
 			return;
 	}
 
@@ -222,7 +222,7 @@ void RobotControler::moveBase(char direction)
 			step = Point3f(0,-sMoveStep,0);
 			break;
 		default:
-			cout << "Nieprawidłowy kierunek" << endl;
+			//cout << "Nieprawidłowy kierunek" << endl;
 			return;
 	}
 	rob.move(step);
@@ -252,7 +252,7 @@ void RobotControler::rotateBase(char direction)
 			rotation = Point3f(0,-sRotStep,0);
 			break;
 		default:
-			cout << "Nieprawidłowy kierunek" << endl;
+			//cout << "Nieprawidłowy kierunek" << endl;
 			return;
 	}
 	rob.rotate(rotation);
