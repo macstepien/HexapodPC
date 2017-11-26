@@ -47,7 +47,7 @@ void View::update(char key, Robot& rob)
 
     if(voltage != "")
     {
-        putText(screen, voltage, Point(20,30), FONT_HERSHEY_SIMPLEX, 1., Scalar(255, 0, 0), 2);
+        putText(screen, voltage, Point(20,30), FONT_HERSHEY_SIMPLEX, 1., Scalar(125, 255, 0), 2);
     }
 
     imshow("img", screen);
