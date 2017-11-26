@@ -35,7 +35,7 @@ class View
 
         void drawRobot(Robot& rob);
         void drawFloor();
-        void drawAxis(cv::Point3f pt);
+        void drawAxis(cv::Point3f pt, cv::Point3f angles = cv::Point3f(0,0,0));
 
         void change(char key);
         void update(char key, Robot& rob);
