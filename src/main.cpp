@@ -97,21 +97,19 @@ int main(int argc, char** argv)
 	while(key != 27)
     {
         rob.control(key,view1);
+
         if(usingTCP)
         {
             unique_lock<mutex> lck(v.own);
-            view1.updateStr(key, rob.getRobot(), v.voltageStr);
+            view1.setVoltage(v.voltageStr);
         }
-        else
-            view1.update(key, rob.getRobot());
+        
+        view1.update(key, rob.getRobot());
 
         key = waitKey(10);
 
         if(usingTCP && stream)
         	stream->send(&key,sizeof(key));
-
-
-
     }
 
     end = true;
