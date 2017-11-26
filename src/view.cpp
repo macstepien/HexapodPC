@@ -47,6 +47,21 @@ void View::update(char key, Robot& rob)
     imshow("img", screen);
 }
 
+void View::updateStr(char key, Robot& rob, string voltage)
+{
+    if(voltage != "")
+        cout << voltage << endl;
+    screen = Mat(480, 640, CV_8UC3, Scalar(255,255,255));
+    change(key);
+    setAngles(Point3f((alfaS-180)*SCALE, (betaS-180)*SCALE, (gammaS-180)*SCALE));
+    drawFloor();
+    drawAxis(Point3f(0,0,0));
+    drawAxis(rob.getPosition());
+    drawRobot(rob);
+
+    imshow("img", screen);
+}
+
 void View::rotateView(cv::Point3f angles)
 {
     alfa += angles.x;

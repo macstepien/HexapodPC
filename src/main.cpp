@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include <thread>
+#include <mutex>
 #include "tcpconnector.h"
 #include "view.h"
 #include "robotcontroler.h"
@@ -13,7 +14,13 @@
 using namespace std;
 using namespace cv;
 
-void battery(bool communication, char* adres, bool* end)
+struct voltage
+{
+    string voltageStr;
+    mutex own;
+};
+
+void battery(bool communication, char* adres, bool* end, voltage* v)
 {
     if(!communication)
         return;
@@ -30,7 +37,9 @@ void battery(bool communication, char* adres, bool* end)
     {
         len = stream1->receive(line, sizeof(line));
         line[len] = '\0';
-        cout << line << endl;
+        //cout << line << endl;
+        unique_lock<mutex> lck(v->own);
+        v->voltageStr = line;
     }
 }
 
@@ -40,12 +49,11 @@ int main(int argc, char** argv)
     unique_ptr<TCPConnector> connector;
     TCPStream* stream;
 
-    /*unique_ptr<TCPConnector> connector1;
-    TCPStream* stream1;*/
-
     int len;
     char line[64];
     bool end = false;
+
+    voltage v;
 
     if(argc < 2)
     {
@@ -57,12 +65,9 @@ int main(int argc, char** argv)
     	cout << "Łączenie z " << argv[1] << ":8080" << endl;
     	connector = make_unique<TCPConnector>();
    	 	stream = connector->connect(argv[1], 8080);
-
-        /*cout << "Łączenie z " << argv[1] << ":8081" << endl;
-        connector1 = make_unique<TCPConnector>();
-        stream1 = connector1->connect(argv[1], 8081);*/
     }
-    thread t1 {battery, argc>=2, argv[1], &end};
+
+    thread t1 {battery, argc>=2, argv[1], &end, &v};
 
     View view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
 
@@ -92,20 +97,23 @@ int main(int argc, char** argv)
 	while(key != 27)
     {
         rob.control(key,view1);
-        view1.update(key, rob.getRobot());
+        if(usingTCP)
+        {
+            unique_lock<mutex> lck(v.own);
+            view1.updateStr(key, rob.getRobot(), v.voltageStr);
+        }
+        else
+            view1.update(key, rob.getRobot());
+
         key = waitKey(10);
 
-        if (usingTCP && stream)
+        if(usingTCP && stream)
         	stream->send(&key,sizeof(key));
 
-        /*if (usingTCP && stream1)
-        {
 
-            len = stream1->receive(line, sizeof(line));
-            line[len] = '\0';
-            cout << line;
-        }*/
+
     }
+
     end = true;
     t1.join();
     

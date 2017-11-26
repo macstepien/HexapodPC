@@ -32,6 +32,7 @@ class View
         void change(char key);
         void drawAxis(cv::Point3f pt);
         void update(char key, Robot& rob);
+        void updateStr(char key, Robot& rob, std::string voltage);
 };
 
 #endif // VIEW_H
