@@ -14,7 +14,7 @@ class Viewer
         const PerspectiveProjection& projector;
 
     public:
-        Viewer(const PerspectiveProjection& projector1) : projector{projector1};
+        Viewer(const PerspectiveProjection& projector1) : projector{projector1} {};
 
         void drawPoint(cv::Point3f point, cv::Mat& img, cv::Scalar color = cv::Scalar(0,0,255), int size1 = 2);
         void drawLine(cv::Point3f p1, cv::Point3f p2, cv::Mat& img, cv::Scalar color = cv::Scalar(0,0,255), int thickness=1);

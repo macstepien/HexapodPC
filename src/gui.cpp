@@ -1,4 +1,4 @@
-#include "view.h"
+#include "gui.h"
 #include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -10,7 +10,7 @@
 using namespace std;
 using namespace cv;
 
-View::View(double f1, cv::Point3f angles, cv::Point3f translation)
+GUI::GUI(double f1, cv::Point3f angles, cv::Point3f position) : projector(f1, angles, position), viewer1(projector)
 {
     translationStep = 10;
     rotationStep = 0.1;
@@ -28,7 +28,7 @@ View::View(double f1, cv::Point3f angles, cv::Point3f translation)
     createTrackbar("gamma", "img", &gammaS, 360);
 }
 
-void View::update(char key, Robot& rob)
+void GUI::update(char key, Robot& rob)
 {
     screen = Mat(480, 640, CV_8UC3, Scalar(255,255,255));
 
@@ -49,19 +49,19 @@ void View::update(char key, Robot& rob)
     imshow("img", screen);
 }
 
-void View::rotateView(cv::Point3f angles)
+void GUI::rotateView(cv::Point3f angles)
 {
     projector.rotate(angles);
 }
 
 
-void View::translateView(cv::Point3f translation)
+void GUI::translateView(cv::Point3f translation)
 {
     //odpowiednie przeksztalcanie przesuniecia aby poruszac sie relatywnie do aktualnych katow, a nie po globalnych osiach(tak lepiej sie to uzytkuje)
     projector.translate(rotate3D(translation, projector.getAngles()));
 }
 
-void View::change(char key)
+void GUI::change(char key)
 {
     switch(key)
     {

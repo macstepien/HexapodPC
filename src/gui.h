@@ -22,7 +22,7 @@ class GUI
         std::string voltage;
 
     public:
-        View(double f1, cv::Point3f angles, cv::Point3f position) : projector(f1, angles, position), viewer1(projector);
+        GUI(double f1, cv::Point3f angles, cv::Point3f position);
 
         void setVoltage(std::string v) {voltage = v;};
 

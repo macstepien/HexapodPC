@@ -1,10 +1,8 @@
-#include "view.h"
-#include <opencv2/core/core.hpp>
+#include "perspectiveprojection.h"
 
-using namespace std;
 using namespace cv;
 
-cv::Point2f View::drawPoint(cv::Point3f p1)
+cv::Point2f PerspectiveProjection::projectPoint(cv::Point3f p1) const
 {
     float x = p1.x-T.x;
     float y = p1.y-T.y;

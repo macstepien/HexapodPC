@@ -1,6 +1,8 @@
 #ifndef PERSPECTIVEPROJECTION_H
 #define PERSPECTIVEPROJECTION_H
 
+#include <opencv2/core/core.hpp>
+
 ///Rzutowanie perspektywiczne na plaszczyzne ekranu
 ///Tu jest to opisane i sa wykorzystywane rownania https://en.wikipedia.org/wiki/3D_projection
 
@@ -12,7 +14,7 @@ class PerspectiveProjection
         cv::Point3f T; //T - pozycja
 
     public:
-        View(double f1, cv::Point3f angles1, cv::Point3f position) : f(f1), angles(angles1), T(position);
+        PerspectiveProjection(double f1, cv::Point3f angles1, cv::Point3f position) : f(f1), angles(angles1), T(position) {};
 
         void setF(double f1) {f = f1;};
         void setAngles(cv::Point3f angles1) {angles = angles1;};
