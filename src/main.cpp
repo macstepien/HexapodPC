@@ -8,7 +8,7 @@
 #include <thread>
 #include <mutex>
 #include "tcpconnector.h"
-#include "view.h"
+#include "gui.h"
 #include "robotcontroler.h"
 
 using namespace std;
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 
     thread t1 {battery, argc>=2, argv[1], &end, &v};
 
-    View view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
+    GUI view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
 
     char key = 'm';
 

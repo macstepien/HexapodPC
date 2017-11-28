@@ -5,7 +5,7 @@
 #include "util.h"
 #include "leg.h"
 
-class View;
+class GUI;
 
 class Robot
 {
@@ -40,14 +40,14 @@ class Robot
         void rotate(cv::Point3f ang);
 
         void walk(cv::Point3f steps);
-        void walkC(cv::Point3f steps, View& view1);
-        void walk2C(cv::Point3f steps, View& view1);
-        void walk3C(cv::Point3f steps, View& view1);
-        void walkAsym(cv::Point3f steps, View& view1);
+        void walkC(cv::Point3f steps, GUI& view1);
+        void walk2C(cv::Point3f steps, GUI& view1);
+        void walk3C(cv::Point3f steps, GUI& view1);
+        void walkAsym(cv::Point3f steps, GUI& view1);
 
         void walkRot(float angle);
-        void walkRotC(float angle, View& view1);
-        void walkRot3C(float angle, View& view1);
+        void walkRotC(float angle, GUI& view1);
+        void walkRot3C(float angle, GUI& view1);
 };
 
 #endif // ROBOT_H

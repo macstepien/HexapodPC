@@ -1,5 +1,5 @@
 #include "robot.h"
-#include "view.h"
+#include "gui.h"
 #include <opencv2/highgui/highgui.hpp>
 #include <unistd.h>
 
@@ -363,7 +363,7 @@ void Robot::walkRot(float angle)
 
 }
 
-void Robot::walkC(Point3f steps, View& view1)
+void Robot::walkC(Point3f steps, GUI& view1)
 {
     walk(steps);
     view1.update('b', *this);
@@ -386,7 +386,7 @@ void Robot::walkC(Point3f steps, View& view1)
     waitKey(delayLong);
 }
 
-void Robot::walkRotC(float angle, View& view1)
+void Robot::walkRotC(float angle, GUI& view1)
 {
     walkRot(angle);
     view1.update('b', *this);
@@ -409,7 +409,7 @@ void Robot::walkRotC(float angle, View& view1)
     waitKey(delayLong);
 }
 
-void Robot::walk2C(Point3f steps, View& view1)
+void Robot::walk2C(Point3f steps, GUI& view1)
 {
     ///najpierw chodzenie tylko do przodu
     /// parabola -h*x(x-z)
@@ -458,7 +458,7 @@ void Robot::walk2C(Point3f steps, View& view1)
     }
 }
 
-void Robot::walk3C(Point3f steps, View& view1)
+void Robot::walk3C(Point3f steps, GUI& view1)
 {
     ///najpierw chodzenie tylko do przodu
     /// parabola -h*x(x-z)
@@ -529,7 +529,7 @@ void Robot::walk3C(Point3f steps, View& view1)
     }
 }
 
-void Robot::walkRot3C(float angle, View& view1)
+void Robot::walkRot3C(float angle, GUI& view1)
 {
     Mat Rx1;
     double da;
@@ -629,7 +629,7 @@ void Robot::walkRot3C(float angle, View& view1)
     }
 }
 
-void Robot::walkAsym(cv::Point3f steps, View& view1)
+void Robot::walkAsym(cv::Point3f steps, GUI& view1)
 {
     int legOrder[6];
     if(firstStep)

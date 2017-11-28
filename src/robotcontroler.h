@@ -3,7 +3,7 @@
 
 #include <opencv2/core/core.hpp>
 #include "robot.h"
-#include "view.h"
+#include "gui.h"
 
 class RobotControler
 {
@@ -32,12 +32,12 @@ class RobotControler
 		/// 1 - backward
 		/// 2 - left
 		/// 3 - right
-		void walk(int mode, char direction, View& view1);
+		void walk(int mode, char direction, GUI& view1);
 
 		///direction:
 		/// 0 - clockwise
 		///	1 - counterclockwise
-		void rotate(int mode, char direction, View& view1);
+		void rotate(int mode, char direction, GUI& view1);
 
 		///directions
 		/// 0 - forward
@@ -51,10 +51,10 @@ class RobotControler
 
 		void restart() {rob.restart(defaultRobotPosition, defaultRobotAngles);}; //resets robot position
 
-		void walkToPoint(cv::Point2f point, View& view1);
-        void showoff(View& view1);
+		void walkToPoint(cv::Point2f point, GUI& view1);
+        void showoff(GUI& view1);
 
-        void control(char key, View& view1);
+        void control(char key, GUI& view1);
 };
 
 

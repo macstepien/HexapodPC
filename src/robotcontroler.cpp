@@ -17,7 +17,7 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	mode = 7;
 }
 
-void RobotControler::control(char key, View& view1)
+void RobotControler::control(char key, GUI& view1)
 {
 	switch(key)
     {
@@ -125,7 +125,7 @@ void RobotControler::control(char key, View& view1)
     }
 }
 
-void RobotControler::walk(int mode, char direction, View& view1)
+void RobotControler::walk(int mode, char direction, GUI& view1)
 {
 	Point3f step;
 	switch(direction)
@@ -168,7 +168,7 @@ void RobotControler::walk(int mode, char direction, View& view1)
 	
 }
 
-void RobotControler::rotate(int mode, char direction, View& view1)
+void RobotControler::rotate(int mode, char direction, GUI& view1)
 {
 	float angle;
 	switch(direction)
@@ -258,7 +258,7 @@ void RobotControler::rotateBase(char direction)
 	rob.rotate(rotation);
 }
 
-void RobotControler::walkToPoint(cv::Point2f point, View& view1)
+void RobotControler::walkToPoint(cv::Point2f point, GUI& view1)
 {
     float destAngle = atan2(point.y, point.x);
     float differenceAngle = destAngle - rob.getAngles().y;
@@ -282,7 +282,7 @@ void RobotControler::walkToPoint(cv::Point2f point, View& view1)
     rob.walkAsym(Point3f(0,0,distance-walkTimes*walkStep), view1);
 }
 
-void RobotControler::showoff(View& view1)
+void RobotControler::showoff(GUI& view1)
 {
     int wait = 500;
 
