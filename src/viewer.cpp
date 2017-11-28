@@ -74,28 +74,10 @@ void Viewer::drawFloor(cv::Mat& img, int size)
 void Viewer::drawAxis(cv::Point3f pt, cv::Mat& img, cv::Point3f angles)
 {
     drawPoint(pt, img);
-    
-    Mat Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(angles.x), -sin(angles.x), 0, sin(angles.x), cos(angles.x));
-    Mat Ry = (Mat_<float>(3,3) << cos(angles.y), 0, sin(angles.y), 0, 1, 0, -sin(angles.y), 0, cos(angles.y));
-    Mat Rz = (Mat_<float>(3,3) << cos(angles.z), -sin(angles.z), 0, sin(angles.z), cos(angles.z), 0, 0, 0, 1);
 
-    Mat R = Rz*Ry*Rx;
-
-    Mat P1 = (Mat_<float>(3,1) << 10, 0, 0);
-    Mat P2 = (Mat_<float>(3,1) << 0, 10, 0);
-    Mat P3 = (Mat_<float>(3,1) << 0, 0, 10);
-
-    Mat P11 = R*P1;
-    Mat P22 = R*P2;
-    Mat P33 = R*P3;
-
-    Point3f p1 = Point3f(P11.at<float>(0,0), P11.at<float>(0,1), P11.at<float>(0,2)) + pt;
-    Point3f p2 = Point3f(P22.at<float>(0,0), P22.at<float>(0,1), P22.at<float>(0,2)) + pt;
-    Point3f p3 = Point3f(P33.at<float>(0,0), P33.at<float>(0,1), P33.at<float>(0,2)) + pt;
-
-    drawLine(pt, p1, img, Scalar(255,0,0), 2);//x niebieski
-    drawLine(pt, p2, img, Scalar(0,255,0), 2);//y zielony
-    drawLine(pt, p3, img, Scalar(0,0,255), 2);//z czerwony
+    drawLine(pt, rotate3D(Point3f(10,0,0),angles)+pt, img, Scalar(255,0,0), 2);//x niebieski
+    drawLine(pt, rotate3D(Point3f(0,10,0),angles)+pt, img, Scalar(0,255,0), 2);//y zielony
+    drawLine(pt, rotate3D(Point3f(0,0,10),angles)+pt, img, Scalar(0,0,255), 2);//z czerwony
 }
 
 void Viewer::drawString(const std::string& str, cv::Mat& img, cv::Point upleft, float scale, cv::Scalar color, int thickness)
