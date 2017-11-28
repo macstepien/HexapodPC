@@ -1,10 +1,5 @@
 #include "leg.h"
-#include <iostream>
-#include <cmath>
-#include <string>
-#include <strstream>
 
-using namespace std;
 using namespace cv;
 
 Leg::Leg(Point3f joint1, Point3f angles1, Point3f lengths1, cv::Point3f signals1)
