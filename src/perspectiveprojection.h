@@ -18,6 +18,10 @@ class PerspectiveProjection
         void setAngles(cv::Point3f angles1) {angles = angles1;};
         void setPosition(cv::Point3f pos) {T = pos;};
 
+        double getF() const {return f;};
+        cv::Point3f getAngles() const {return angles;};
+        cv::Point3f getPosition() const {return T;};
+
         void rotate(cv::Point3f angles1) {angles += angles1;};
         void translate(cv::Point3f pos) {T += pos;};
 
