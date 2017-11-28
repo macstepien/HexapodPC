@@ -15,10 +15,8 @@ class GUI
         PerspectiveProjection projector;
         Viewer viewer1;
 
-        double alfa, beta, gamma;//katy kamery (alfa - os x, beta - os y, gamma - os z)
-        int alfaS, betaS, gammaS;
-        double f; //
-        cv::Point3f T; //T - pozycja
+        int alfaS, betaS, gammaS;//katy kamery (alfa - os x, beta - os y, gamma - os z)
+
         float translationStep, rotationStep; //o ile sie przesuwa kamera; o ile sie obraca
         cv::Mat screen;
         std::string voltage;
@@ -34,7 +32,6 @@ class GUI
 
         void change(char key);
         void update(char key, Robot& rob);
-        void updateStr(char key, Robot& rob, std::string voltage);
 };
 
 #endif // GUI_H

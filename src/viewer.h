@@ -5,6 +5,7 @@
 
 #include "util.h"
 #include "robot.h"
+#include "perspectiveprojection.h"
 #include <opencv2/core/core.hpp>
 
 class Viewer

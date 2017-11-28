@@ -1,3 +1,7 @@
+#include "util.h"
+
+using namespace cv;
+
 cv::Point3f rotate3D(cv::Point3f pt, cv::Point3f angles)
 {
     Mat Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(angles.x), -sin(angles.x), 0, sin(angles.x), cos(angles.x));
