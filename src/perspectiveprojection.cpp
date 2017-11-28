@@ -20,6 +20,18 @@ void View::setAngles(cv::Point3f angles)
     gamma = angles.z;
 }
 
+void rotate(cv::Point3f angles)
+{
+    alfa += angles.x;
+    beta += angles.y;
+    gamma += angles.z;
+}
+
+void translate(cv::Point3f pos)
+{
+    T += pos;
+}
+
 cv::Point2f View::drawPoint(cv::Point3f p1)
 {
     float x = p1.x-T.x;

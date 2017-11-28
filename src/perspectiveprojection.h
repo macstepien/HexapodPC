@@ -18,7 +18,10 @@ class PerspectiveProjection
         void setAngles(cv::Point3f angles);
         void setPosition(cv::Point3f pos) {T = pos;};
 
-        cv::Point2f projectPoint(cv::Point3f point); // rzutuje punkt na daną płaszczyznę
+        void rotate(cv::Point3f angles);
+        void translate(cv::Point3f pos);
+
+        cv::Point2f projectPoint(cv::Point3f point) const; // rzutuje punkt na daną płaszczyznę
 };
 
 #endif
