@@ -7,9 +7,8 @@
 class PerspectiveProjection
 {
 	private:
-        cv::Point3f angles; // kąty kamery
-        double alfa, beta, gamma;//katy kamery (alfa - os x, beta - os y, gamma - os z)
         double f; //ogniskowa
+        cv::Point3f angles; // kąty kamery
         cv::Point3f T; //T - pozycja
 
     public:
