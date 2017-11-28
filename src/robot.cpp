@@ -1,12 +1,9 @@
 #include "robot.h"
 #include "view.h"
 #include <opencv2/highgui/highgui.hpp>
-#include <iostream>
-#include <strstream>
 #include <unistd.h>
 
 using namespace cv;
-using namespace std;
 
 Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths)
 {
