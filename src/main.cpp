@@ -36,7 +36,7 @@ void battery(bool communication, char* adres, bool* end, voltage* v)
     while(stream1 && !(*end))
     {
         len = stream1->receive(line, sizeof(line));
-        line[len] = '\0';
+        line[5] = '\0'; // liczba w formacie X.XXX - 3 miejsca po przecinku
         //cout << line << endl;
         unique_lock<mutex> lck(v->own);
         v->voltageStr = line;
