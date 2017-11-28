@@ -4,34 +4,6 @@
 using namespace std;
 using namespace cv;
 
-View::View(double f1, cv::Point3f angles, cv::Point3f translation)
-{
-    f = f1;
-    alfa = angles.x;
-    beta = angles.y;
-    gamma = angles.z;
-    T = position;
-}
-
-void View::setAngles(cv::Point3f angles)
-{
-    alfa = angles.x;
-    beta = angles.y;
-    gamma = angles.z;
-}
-
-void rotate(cv::Point3f angles)
-{
-    alfa += angles.x;
-    beta += angles.y;
-    gamma += angles.z;
-}
-
-void translate(cv::Point3f pos)
-{
-    T += pos;
-}
-
 cv::Point2f View::drawPoint(cv::Point3f p1)
 {
     float x = p1.x-T.x;
@@ -40,9 +12,9 @@ cv::Point2f View::drawPoint(cv::Point3f p1)
 
     //rzutowanie punktu tak jak na wikipedii
     Point3f p11;
-    p11.x = cos(beta)*(sin(gamma)*y+cos(gamma)*x)-sin(beta)*z;
-    p11.y = sin(alfa)*(cos(beta)*z + sin(beta)*(sin(gamma)*y + cos(gamma)*x))+cos(alfa)*(cos(gamma)*y-sin(gamma)*x);
-    p11.z = cos(alfa)*(cos(beta)*z + sin(beta)*(sin(gamma)*y + cos(gamma)*x))-sin(alfa)*(cos(gamma)*y-sin(gamma)*x);
+    p11.x = cos(angles.y)*(sin(angles.z)*y+cos(angles.z)*x)-sin(angles.y)*z;
+    p11.y = sin(angles.x)*(cos(angles.y)*z + sin(angles.y)*(sin(angles.z)*y + cos(angles.z)*x))+cos(angles.x)*(cos(angles.z)*y-sin(angles.z)*x);
+    p11.z = cos(angles.x)*(cos(angles.y)*z + sin(angles.y)*(sin(angles.z)*y + cos(angles.z)*x))-sin(angles.x)*(cos(angles.z)*y-sin(angles.z)*x);
 
     Point2f point1;
     point1.x = f*(p11.x/p11.z);
