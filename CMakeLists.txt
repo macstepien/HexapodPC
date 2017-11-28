@@ -23,8 +23,10 @@ set(SOURCES
 	src/leg.h src/leg.cpp
 	src/robot.h src/robot.cpp
 	src/robotcontroler.h src/robotcontroler.cpp
-	src/view.h src/view.cpp
-	src/util.h
+	src/gui.h src/gui.cpp
+	src/viewer.h src/viewer.cpp
+	src/perspectiveprojection.h src/perspectiveprojection.cpp
+	src/util.h src/util.cpp
 	src/tcpconnector.h src/tcpconnector.cpp
 	src/tcpacceptor.h src/tcpacceptor.cpp
 	src/tcpstream.h src/tcpstream.cpp)
