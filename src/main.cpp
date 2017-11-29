@@ -7,9 +7,9 @@
 #include <memory>
 #include <thread>
 #include <mutex>
-#include "tcpconnector.h"
-#include "gui.h"
-#include "robotcontroler.h"
+#include "TCP/tcpconnector.h"
+#include "GUI/gui.h"
+#include "Robot/robotcontroler.h"
 
 using namespace std;
 using namespace cv;
