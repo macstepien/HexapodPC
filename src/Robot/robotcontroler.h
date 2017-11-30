@@ -24,6 +24,7 @@ class RobotControler
 		int mode;
 
 		bool started;
+		int walkingDirection;
 
 
 	public:

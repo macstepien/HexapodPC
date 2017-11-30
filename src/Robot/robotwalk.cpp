@@ -133,12 +133,24 @@ void RobotWalk::walkStraightAlt2(float step, int mode, Robot& rob, GUI& view1)
 {
     int legOrder[6];
     
-    legOrder[0] = 0;
-    legOrder[1] = 4;
-    legOrder[2] = 2;
-    legOrder[3] = 3;
-    legOrder[4] = 1;
-    legOrder[5] = 5;
+    if(step > 0)
+    {
+        legOrder[0] = 0;
+        legOrder[1] = 4;
+        legOrder[2] = 2;
+        legOrder[3] = 3;
+        legOrder[4] = 1;
+        legOrder[5] = 5;
+    }
+    else
+    {
+        legOrder[0] = 3;
+        legOrder[1] = 1;
+        legOrder[2] = 5;
+        legOrder[3] = 0;
+        legOrder[4] = 4;
+        legOrder[5] = 2;
+    }
     
     if(mode == 0)
     {

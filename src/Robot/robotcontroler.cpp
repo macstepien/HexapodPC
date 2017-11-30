@@ -16,6 +16,7 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	defaultRobotAngles = ang;
 	mode = 6;
     started = false;
+    walkingDirection = 0;
 }
 
 void RobotControler::control(char key, GUI& view1)
@@ -99,7 +100,10 @@ void RobotControler::control(char key, GUI& view1)
 
     if(started && (mode != 6))
     {
-        mode6(key, 2, view1);
+        if(walkingDirection == 1)
+            mode6('W', 2, view1);
+        else if (walkingDirection == 2)
+            mode6('S', 2, view1);
         started = false;
     }
 }
@@ -115,11 +119,18 @@ void RobotControler::mode6(char direction, int stage, GUI& view1)
             walker.walk(Point3f(-walkStep, 0, 0), rob, view1);
             break;
         case 'W':
+            
             walker.walkStraightAlt2(walkStep, stage, rob, view1);
+
+            walkingDirection = 1;
+            
             started = true;
             break;
         case 'S':
+            
             walker.walkStraightAlt2(-walkStep, stage, rob, view1);
+
+            walkingDirection = 2;
             started = true;
             break;
         case 'E':
