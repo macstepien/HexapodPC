@@ -87,10 +87,7 @@ void RobotControler::control(char key, GUI& view1)
 
             break;
         case 8:
-        	cout << "Podaj wspolrzedne: ";
-        	cin >> pkt.x >> pkt.y;
-        	walkToPoint(pkt, view1);
-        	mode = 5;
+        
         	break;
         case 9:
         	showoff(view1);

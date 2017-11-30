@@ -91,11 +91,14 @@ int main(int argc, char** argv)
     ///2 - stanie w miesjscu i obroty
     ///3 - poruszanie siê manualne
     ///4 - poruszanie siê automatyczne
-    ///5 - automatyczne z poprawioną płynnością
-    ///6 - automatyczne z płynnym chodzeniem do przodu i zakręcaniem
+    ///5 - automatyczne z ruchem nogi po paraboli
+    ///6 - automatyczne bez wracania do pozycji początkowej
+    ///8 - chodzenie do punktu
+    ///9 - tryb pokazowy
         
 	while(key != 27)
     {
+        
         rob.control(key,view1);
 
         if(usingTCP)
@@ -110,6 +113,25 @@ int main(int argc, char** argv)
 
         if(usingTCP && stream)
         	stream->send(&key,sizeof(key));
+
+        if(key == '8')
+        {
+            Point pkt;
+            cout << "Podaj wspolrzedne: ";
+            cin >> pkt.x >> pkt.y;
+            rob.walkToPoint(pkt, view1);
+            if(usingTCP && stream)
+            {
+                char p[2];
+                p[1] = pkt.x;
+                p[2] = (pkt.x >> 8);
+                stream->send(p,sizeof(p));
+
+                p[1] = pkt.y;
+                p[2] = (pkt.y >> 8);
+                stream->send(p,sizeof(p));
+            }
+        }
     }
 
     end = true;
