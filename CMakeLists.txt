@@ -24,6 +24,7 @@ set(SOURCES
 
 	src/Robot/leg.h src/Robot/leg.cpp
 	src/Robot/robot.h src/Robot/robot.cpp
+	src/Robot/robotwalk.h src/Robot/robotwalk.cpp
 	src/Robot/robotcontroler.h src/Robot/robotcontroler.cpp
 	
 	src/util.h src/util.cpp

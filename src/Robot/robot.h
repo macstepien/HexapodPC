@@ -5,25 +5,25 @@
 #include "util.h"
 #include "Robot/leg.h"
 
-class GUI;
-
 class Robot
 {
     private:
         rect lFrame, gFrame;// l - lokalne g - globalne
-        cv::Point3f position;
+
+        //position and angles of middles point in robots base
+        cv::Point3f position; 
+        cv::Point3f angles;
+
+        //initial values ( will be set in case of restart )
         cv::Point3f initPosition;
         cv::Point3f initAngles;
-        cv::Point3f angles;
+        
+        //width and length of robots base
         float width, length;
+
         cv::Mat Rx, Ry, Rz, R;
         Leg legs[6];
-        int walkingStep;
-        cv::Point3f stepsl[6];
-        int delayLong; //delay between each step in function walk
-        int delayShort; //delay used between each iteration in walk2C walk3C walkRot3C
-        bool firstStep;
-
+        
         void moveCoordinates(cv::Point3f p, cv::Point3f ang);
 
     public:
@@ -33,21 +33,14 @@ class Robot
         cv::Point3f getAngles() const {return angles;};
         rect getFrame();
         joints getLegJoints(int n);
+        Leg getLeg(int n) const {return legs[n];}
 
-        void restart(cv::Point3f pos, cv::Point3f ang);
+        void restart(cv::Point3f pos, cv::Point3f ang); // restart robot to its base position
 
-        void move(cv::Point3f p);
-        void rotate(cv::Point3f ang);
+        void move(cv::Point3f p); // moves robot base ( only base moves - leg ends stays the same )
+        void rotate(cv::Point3f ang); // rotates robot base ( only base rotates - leg ends stays the same )
 
-        void walk(cv::Point3f steps);
-        void walkC(cv::Point3f steps, GUI& view1);
-        void walk2C(cv::Point3f steps, GUI& view1);
-        void walk3C(cv::Point3f steps, GUI& view1);
-        void walkAsym(cv::Point3f steps, GUI& view1);
-
-        void walkRot(float angle);
-        void walkRotC(float angle, GUI& view1);
-        void walkRot3C(float angle, GUI& view1);
+        void moveLeg(int n, cv::Point3f p);
 };
 
 #endif // ROBOT_H
