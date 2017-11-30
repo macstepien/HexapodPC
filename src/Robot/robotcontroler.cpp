@@ -304,11 +304,14 @@ void RobotControler::walkToPoint(cv::Point2f point, GUI& view1)
 
     int walkTimes = distance/walkStep;
 
+    //walker.walkStraightAlt2((distance-walkTimes*walkStep), 0, rob, view1);
+    walker.walkStraightAlt2(walkStep, 0, rob, view1);
     for(int i = 0; i < walkTimes; ++i)
     {
-        walker.walkStraightAlt(walkStep, rob, view1);
+        walker.walkStraightAlt2(walkStep, 1, rob, view1);
     }
-    walker.walkStraightAlt(distance-walkTimes*walkStep, rob, view1);
+    walker.walkStraightAlt2(walkStep, 2, rob, view1);
+    //walker.walkStraightAlt2((distance-walkTimes*walkStep), 2, rob, view1);
 }
 
 void RobotControler::showoff(GUI& view1)
