@@ -9,7 +9,7 @@ class RobotWalk
 	private:
 
 		int delayLong; //delay between each step in function walk
-        int delayShort; //delay used between each iteration in walk2C walk3C walkRot3C
+        int delayShort; //delay used between each iteration walk walkStraight and walkStraightAlt
         bool firstStep;
 
         int walkingSequnceNo;
@@ -39,6 +39,9 @@ class RobotWalk
 
 	    //walkStraight but legs 042 start sequence and then 315 start
 	    void walkStraightAlt(float step, Robot& rob, GUI& view1);
+
+	    //modes 0 - start 1 - walking 2 - end
+	    void walkStraightAlt2(float step, int mode, Robot& rob, GUI& view1);
 
 	    //smooth steps in any direction
 	    void walk(cv::Point3f step, Robot& rob, GUI& view1);

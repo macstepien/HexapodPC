@@ -23,6 +23,8 @@ class RobotControler
 
 		int mode;
 
+		bool started;
+
 
 	public:
 		RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);
@@ -37,6 +39,8 @@ class RobotControler
 
 		//smooth walking
 		void mode5(char direction, GUI& view1);
+
+		void mode6(char direction, int stage, GUI& view1);
 
 		///directions
 		/// 0 - forward

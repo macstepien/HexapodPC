@@ -1,5 +1,8 @@
 #include "Robot/robotwalk.h"
 #include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+
+using namespace std;
 
 using namespace cv;
 
@@ -34,7 +37,7 @@ void RobotWalk::walkStraight(float step, Robot& rob, GUI& view1)
 
     for (double i = 0; i < z; i += di)
     {
-        steps = Point3f(0, 2*a*i*di-a*z*di, sdi);
+        steps = Point3f(0, -(rob.getLeg(0).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
 
         rob.moveLeg(0, steps);
         rob.moveLeg(4, steps);
@@ -49,7 +52,7 @@ void RobotWalk::walkStraight(float step, Robot& rob, GUI& view1)
 
     for (double i = 0; i < z; i += di)
     {
-        steps = Point3f(0, 2*a*i*di-a*z*di, sdi);
+        steps = Point3f(0, -(rob.getLeg(3).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
 
         rob.moveLeg(3, steps);
         rob.moveLeg(1, steps);
@@ -99,7 +102,7 @@ void RobotWalk::walkStraightAlt(float step, Robot& rob, GUI& view1)
 
     for (double i = 0; i < z; i += di)
     {
-        steps = Point3f(0, 2*a*i*di-a*z*di, sdi);
+        steps = Point3f(0, -(rob.getLeg(legOrder[0]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
 
         for(int j = 0; j < 3; ++j)
             rob.moveLeg(legOrder[j], steps);
@@ -113,7 +116,7 @@ void RobotWalk::walkStraightAlt(float step, Robot& rob, GUI& view1)
 
     for (double i = 0; i < z; i += di)
     {
-        steps = Point3f(0, 2*a*i*di-a*z*di, sdi);
+        steps = Point3f(0, -(rob.getLeg(legOrder[3]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
 
         for(int j = 3; j < 6; ++j)
             rob.moveLeg(legOrder[j], steps);
@@ -123,6 +126,109 @@ void RobotWalk::walkStraightAlt(float step, Robot& rob, GUI& view1)
         view1.update('b', rob);
 
         waitKey(delayShort);
+    }
+}
+
+void RobotWalk::walkStraightAlt2(float step, int mode, Robot& rob, GUI& view1)
+{
+    int legOrder[6];
+    
+    legOrder[0] = 0;
+    legOrder[1] = 4;
+    legOrder[2] = 2;
+    legOrder[3] = 3;
+    legOrder[4] = 1;
+    legOrder[5] = 5;
+    
+    if(mode == 0)
+    {
+        Point3f steps;
+        float z = step;
+        float a = (4*stepHeight)/(z*z);
+
+        float di = smallMotion;
+
+        float sdi = (z<0)?-di:di;
+        z = abs(z);
+
+        for (double i = 0; i < z; i += di)
+        {
+            steps = Point3f(0, -(rob.getLeg(legOrder[0]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
+
+            for(int j = 0; j < 3; ++j)
+                rob.moveLeg(legOrder[j], steps);
+
+            rob.move(Point3f(0,0,sdi/2));
+
+            view1.update('b', rob);
+
+            waitKey(delayShort);
+        }
+    }
+    else if(mode == 1)
+    {
+        Point3f steps;
+
+        float z = 2*step;
+        float a = (4*stepHeight)/(z*z);
+
+        float di = smallMotion;
+
+        float sdi = (z<0)?-di:di;
+        z = abs(z);
+
+        for (double i = 0; i < z; i += di)
+        {
+            steps = Point3f(0, -(rob.getLeg(legOrder[3]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
+
+            for(int j = 3; j < 6; ++j)
+                rob.moveLeg(legOrder[j], steps);
+
+            rob.move(Point3f(0,0,sdi/2));
+
+            view1.update('b', rob);
+
+            waitKey(delayShort);
+        }
+
+        for (double i = 0; i < z; i += di)
+        {
+            steps = Point3f(0, -(rob.getLeg(legOrder[0]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
+
+            for(int j = 0; j < 3; ++j)
+                rob.moveLeg(legOrder[j], steps);
+
+            rob.move(Point3f(0,0,sdi/2));
+
+            view1.update('b', rob);
+
+            waitKey(delayShort);
+        }
+    }
+    else if(mode == 2)
+    {
+        Point3f steps;
+        float z = step;
+        float a = (4*stepHeight)/(z*z);
+
+        float di = smallMotion;
+
+        float sdi = (z<0)?-di:di;
+        z = abs(z);
+
+        for (double i = 0; i < z; i += di)
+        {
+            steps = Point3f(0, -(rob.getLeg(legOrder[3]).getJoints().D.y - 16.3) + a*i*(i-z), sdi);
+
+            for(int j = 3; j < 6; ++j)
+                rob.moveLeg(legOrder[j], steps);
+
+            rob.move(Point3f(0,0,sdi/2));
+
+            view1.update('b', rob);
+
+            waitKey(delayShort);
+        }
     }
 }
 

@@ -14,7 +14,8 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	sRotStep = sRotStep1;
 	defaultRobotPosition = pos;
 	defaultRobotAngles = ang;
-	mode = 5;
+	mode = 6;
+    started = false;
 }
 
 void RobotControler::control(char key, GUI& view1)
@@ -73,6 +74,12 @@ void RobotControler::control(char key, GUI& view1)
             mode5(key, view1);
             break;
         case 6:
+            if(!started)
+            {
+                mode6(key, 0, view1);
+            }
+            else
+                mode6(key, 1, view1);
 
             break;
         case 7:
@@ -82,15 +89,49 @@ void RobotControler::control(char key, GUI& view1)
         	cout << "Podaj wspolrzedne: ";
         	cin >> pkt.x >> pkt.y;
         	walkToPoint(pkt, view1);
-        	mode = 7;
+        	mode = 5;
         	break;
         case 9:
         	showoff(view1);
-    		mode = 7;
+    		mode = 5;
     		break;
+    }
+
+    if(started && (mode != 6))
+    {
+        mode6(key, 2, view1);
+        started = false;
     }
 }
 
+void RobotControler::mode6(char direction, int stage, GUI& view1)
+{
+    switch(direction)
+    {
+        case 'D':
+            walker.walk(Point3f(walkStep, 0, 0), rob, view1);
+            break;
+        case 'A':
+            walker.walk(Point3f(-walkStep, 0, 0), rob, view1);
+            break;
+        case 'W':
+            walker.walkStraightAlt2(walkStep, stage, rob, view1);
+            started = true;
+            break;
+        case 'S':
+            walker.walkStraightAlt2(-walkStep, stage, rob, view1);
+            started = true;
+            break;
+        case 'E':
+            walker.rotation(rotStep, rob, view1);
+            break;
+        case 'Q':
+            walker.rotation(-rotStep, rob, view1);
+            break;
+        default:
+            return;
+    }
+}
 
 void RobotControler::mode3(char direction)
 {
@@ -172,6 +213,8 @@ void RobotControler::mode5(char direction, GUI& view1)
             return;
     }
 }
+
+
 
 void RobotControler::moveBase(char direction)
 {
