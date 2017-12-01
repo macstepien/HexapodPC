@@ -26,6 +26,9 @@ class RobotControler
 		bool startedStepAhead;
 		int directionStepAhead;
 
+		bool startContinuous;
+		int directionContinuous;
+
 
 	public:
 		RobotControler(float walkStep1, float rotStep1, float sMoveStep1, float sRotStep1, int delayShort, float stepHeight, cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::Point3f leglengths);

@@ -18,9 +18,12 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 	defaultRobotAngles = ang;
 
 	mode = 6;
-    
+
     startedStepAhead = false;
     directionStepAhead = 0;
+
+    directionContinuous = 0;
+    startContinuous = false;
 }
 
 void RobotControler::control(char key, GUI& view1)
@@ -88,7 +91,7 @@ void RobotControler::control(char key, GUI& view1)
 
             break;
         case 7:
-
+            continuousWalking(key, view1);
             break;
         case 8:
         
@@ -142,6 +145,41 @@ void RobotControler::walkingStepAhead(char direction, int stage, GUI& view1)
             break;
         default:
             return;
+    }
+}
+
+void RobotControler::continuousWalking(char direction, GUI& view1)
+{
+    if(directionContinuous == 0)
+    {
+        switch(direction)
+        {
+            case 'w':
+                walker.walkStepAhead(walkStep, 0, rob, view1);
+                directionContinuous = 1;
+                break;
+            case 's':
+                walker.walkStepAhead(-walkStep, 0, rob, view1);
+                directionContinuous = 2;
+                break;
+        }
+    }
+    else
+    {
+        if(directionContinuous == 1)
+            walker.walkStepAhead(walkStep, 1, rob, view1);
+        else if(directionContinuous == 2)
+            walker.walkStepAhead(-walkStep, 1, rob, view1);
+
+        if(direction == 'z')
+        {
+            if(directionContinuous == 1)
+                walker.walkStepAhead(walkStep, 2, rob, view1);
+            else if(directionContinuous == 2)
+                walker.walkStepAhead(-walkStep, 2, rob, view1);
+
+            directionContinuous = 0;
+        }
     }
 }
 
