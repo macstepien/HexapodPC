@@ -41,7 +41,7 @@ class RobotWalk
 	    void walkStraightAlt(float step, Robot& rob, GUI& view1);
 
 	    //modes 0 - start 1 - walking 2 - end
-	    void walkStraightAlt2(float step, int mode, Robot& rob, GUI& view1);
+	    void walkStepAhead(float step, int mode, Robot& rob, GUI& view1);
 
 	    //smooth steps in any direction
 	    void walk(cv::Point3f step, Robot& rob, GUI& view1);

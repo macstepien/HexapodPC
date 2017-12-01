@@ -32,16 +32,15 @@ class RobotControler
 
 		Robot& getRobot() {return rob;};
 
-		//simple walking
-		void mode3(char direction);
+		void simpleWalking(char direction);
 
-		//automatic walking
-		void mode4(char direction, GUI& view1);
+		void simpleAutomaticWalking(char direction, GUI& view1);
 
-		//smooth walking
-		void mode5(char direction, GUI& view1);
+		void smoothWalking(char direction, GUI& view1);
 
-		void mode6(char direction, int stage, GUI& view1);
+		void walkingStepAhead(char direction, int stage, GUI& view1);
+
+		void continuousWalking(char direction, GUI& view1);
 
 		///directions
 		/// 0 - forward

@@ -129,7 +129,7 @@ void RobotWalk::walkStraightAlt(float step, Robot& rob, GUI& view1)
     }
 }
 
-void RobotWalk::walkStraightAlt2(float step, int mode, Robot& rob, GUI& view1)
+void RobotWalk::walkStepAhead(float step, int mode, Robot& rob, GUI& view1)
 {
     int legOrder[6];
     

@@ -66,21 +66,21 @@ void RobotControler::control(char key, GUI& view1)
             rotateBase(key);
             break;
         case 3:
-            mode3(key);
+            simpleWalking(key);
             break;
         case 4:
-            mode4(key, view1);
+            simpleAutomaticWalking(key, view1);
             break;
         case 5:
-            mode5(key, view1);
+            smoothWalking(key, view1);
             break;
         case 6:
             if(!started)
             {
-                mode6(key, 0, view1);
+                walkingStepAhead(key, 0, view1);
             }
             else
-                mode6(key, 1, view1);
+                walkingStepAhead(key, 1, view1);
 
             break;
         case 7:
@@ -98,14 +98,14 @@ void RobotControler::control(char key, GUI& view1)
     if(started && (mode != 6))
     {
         if(walkingDirection == 1)
-            mode6('W', 2, view1);
+            walkingStepAhead('W', 2, view1);
         else if (walkingDirection == 2)
-            mode6('S', 2, view1);
+            walkingStepAhead('S', 2, view1);
         started = false;
     }
 }
 
-void RobotControler::mode6(char direction, int stage, GUI& view1)
+void RobotControler::walkingStepAhead(char direction, int stage, GUI& view1)
 {
     switch(direction)
     {
@@ -117,7 +117,7 @@ void RobotControler::mode6(char direction, int stage, GUI& view1)
             break;
         case 'W':
             
-            walker.walkStraightAlt2(walkStep, stage, rob, view1);
+            walker.walkStepAhead(walkStep, stage, rob, view1);
 
             walkingDirection = 1;
             
@@ -125,7 +125,7 @@ void RobotControler::mode6(char direction, int stage, GUI& view1)
             break;
         case 'S':
             
-            walker.walkStraightAlt2(-walkStep, stage, rob, view1);
+            walker.walkStepAhead(-walkStep, stage, rob, view1);
 
             walkingDirection = 2;
             started = true;
@@ -141,7 +141,7 @@ void RobotControler::mode6(char direction, int stage, GUI& view1)
     }
 }
 
-void RobotControler::mode3(char direction)
+void RobotControler::simpleWalking(char direction)
 {
     switch(direction)
     {
@@ -168,7 +168,7 @@ void RobotControler::mode3(char direction)
     }
 }
 
-void RobotControler::mode4(char direction, GUI& view1)
+void RobotControler::simpleAutomaticWalking(char direction, GUI& view1)
 {
     switch(direction)
     {
@@ -195,7 +195,7 @@ void RobotControler::mode4(char direction, GUI& view1)
     }
 }
 
-void RobotControler::mode5(char direction, GUI& view1)
+void RobotControler::smoothWalking(char direction, GUI& view1)
 {
     switch(direction)
     {
@@ -302,12 +302,12 @@ void RobotControler::walkToPoint(cv::Point2f point, GUI& view1)
     int walkTimes = distance/walkStep;
 
     //walker.walkStraightAlt2((distance-walkTimes*walkStep), 0, rob, view1);
-    walker.walkStraightAlt2(walkStep, 0, rob, view1);
+    walker.walkStepAhead(walkStep, 0, rob, view1);
     for(int i = 0; i < walkTimes; ++i)
     {
-        walker.walkStraightAlt2(walkStep, 1, rob, view1);
+        walker.walkStepAhead(walkStep, 1, rob, view1);
     }
-    walker.walkStraightAlt2(walkStep, 2, rob, view1);
+    walker.walkStepAhead(walkStep, 2, rob, view1);
     //walker.walkStraightAlt2((distance-walkTimes*walkStep), 2, rob, view1);
 }
 
