@@ -25,7 +25,7 @@ class RobotWalk
 	
 	public:
 
-		RobotWalk();
+		RobotWalk(int delayShort1 = 10, float stepHeight1 = 4);
 
 		//simple walk with setting leg end to position in the middle
 		//each call to function provides different step of sequence ( 5 walkingSequnceNo)

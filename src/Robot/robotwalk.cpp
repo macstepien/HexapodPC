@@ -6,16 +6,16 @@ using namespace std;
 
 using namespace cv;
 
-RobotWalk::RobotWalk()
+RobotWalk::RobotWalk(int delayShort1, float stepHeight1)
 {
     walkingSequnceNo = 0;
     rotatingSequenceNo = 0;
 
     delayLong = 500;
-    delayShort = 10;
+    delayShort = delayShort1;
 
     firstStep = true;
-    stepHeight = 4;
+    stepHeight = stepHeight1;
 
     smallMotion = 0.3;
 }
