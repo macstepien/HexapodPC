@@ -46,70 +46,119 @@ void battery(bool communication, char* adres, bool* end, voltage* v)
 }
 
 static char getChar(){
- 
+ 	
+ 	static int mode;
+    
     float XX,YY;
     GamepadStickNormXY((GAMEPAD_DEVICE)0, STICK_LEFT,&XX, &YY);
     int x,y;
     x=(int)XX;
     y=(int)YY;
-    move(3,0);
-    printw("%f",XX);
-    move(4,0);
-    printw("%f",YY);
-    if ( XX == -1){
-        return 'a';
-    }
-    if ( XX == 1){
-        return 'd';
-    }
-    if ( YY == 1){
-        return 'w';
-    }
-    if ( YY == -1){
-        return 's';
-    }
+
+    if(mode == 0)
+    {
+	    if ( XX == -1){
+	        return 'a';
+	    }
+	    if ( XX == 1){
+	        return 'd';
+	    }
+	    if ( YY == 1){
+	        return 'w';
+	    }
+	    if ( YY == -1){
+	        return 's';
+	    }
+	}
+	
     GamepadStickNormXY((GAMEPAD_DEVICE)0, STICK_RIGHT,&XX, &YY);
     x=(int)XX;
     y=(int)YY;
-    move(3,0);
-    printw("%f",XX);
-    move(4,0);
-    printw("%f",YY);
-    if ( XX == -1){
-        return 'q';
-    }
-    if ( XX == 1){
-        return 'e';
-    }
+
+    if(mode == 0)
+    {
+	    if ( XX == -1){
+	        return 'q';
+	    }
+	    if ( XX == 1){
+	        return 'e';
+	    }
+	}
+
     bool button;
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )12);
-    if ( button == true){
-        return '1';
-    }
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )13);
-    if ( button == true ){
-        return '2';
-    }
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )7);
+    
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )5);
     if ( button == true) {
-        return 'R';
+        return 'r';
     }
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )14);
+
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )4);
     if ( button == true){
-        return '5';
+        if(mode == 0)
+        	mode = 1;
+        else
+        	mode = 0;
+        return 'p';
     }
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )15);
-    if ( button == true){
-        return '6';
-    }
-    // button = GamepadButtonDown((GAMEPAD_DEVICE)0, BUTTON_X);
-    // if ( button == 1){
-    //     return '6';
-    // }
-    // button = GamepadButtonDown((GAMEPAD_DEVICE)0, BUTTON_Y);
-    // if ( button == 1){
-    //     return '7';
-    // }
+
+    if(mode == 1)
+	{
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )15);
+		if ( button == true){
+		    return 'w';
+		}
+		    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )12);
+		if ( button == true){
+		    return 's';
+		}
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )14);
+		if ( button == true){
+		    return 'a';
+		}
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )13);
+		if ( button == true){
+		    return 'd';
+		}
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )8);
+		if ( button == true){
+		    return 'q';
+		}
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )9);
+		if ( button == true){
+		    return 'e';
+		}
+	}
+	else
+	{
+		button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )12);
+	    if ( button == true){
+	        return '1';
+	    }
+	    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )13);
+	    if ( button == true ){
+	        return '2';
+	    }
+	    
+	    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )14);
+	    if ( button == true){
+	        return '5';
+	    }
+	    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )15);
+	    if ( button == true){
+	        return '6';
+	    }
+
+	    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )8);
+	    if ( button == true){
+	        return '7';
+	    }
+	    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )9);
+	    if ( button == true){
+	        return 'z';
+	    }
+
+	}
+
     return 'm';
  
 }
@@ -177,13 +226,15 @@ int main(int argc, char** argv)
     /// A - 
     /// B - 
 
-    initscr();
+    //initscr();
     cbreak();
     noecho();
     timeout(1);
     unsigned int microseconds;
     microseconds = 100000;
     GamepadInit();
+
+    int mode = 1;
         
 	while(keyKeyboard != 27)
     {
@@ -196,6 +247,11 @@ int main(int argc, char** argv)
         }
  
         keyPad=getChar();
+
+        /*if(keyPad == '1' || keyPad == '2')
+        	mode = 2;
+        else if(keyPad == '3' || keyPad == '4' || keyPad == '5' || keyPad == '6' || keyPad == '7' || keyPad == '8' || keyPad == '9')
+        	mode = 1;*/
 
         rob.control(keyPad,view1);
 
