@@ -7,10 +7,11 @@
 #include <memory>
 #include <thread>
 #include <mutex>
+#include <ncurses.h>
 #include "TCP/tcpconnector.h"
 #include "GUI/gui.h"
 #include "Robot/robotcontroler.h"
-#include "GUI/gamepad.h"
+#include "Gamepad/gamepad.h"
 
 using namespace std;
 using namespace cv;
@@ -89,17 +90,17 @@ static char getChar(){
     if ( button == true ){
         return '2';
     }
-    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )5);
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )7);
     if ( button == true) {
         return 'R';
     }
     button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )14);
     if ( button == true){
-        return '6';
+        return '5';
     }
     button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )15);
     if ( button == true){
-        return '7';
+        return '6';
     }
     // button = GamepadButtonDown((GAMEPAD_DEVICE)0, BUTTON_X);
     // if ( button == 1){
@@ -169,6 +170,12 @@ int main(int argc, char** argv)
     ///6 - automatyczne bez wracania do pozycji początkowej
     ///8 - chodzenie do punktu
     ///9 - tryb pokazowy
+
+    ///Pad:
+    /// Y - automatyczne bez wracania do pozycji początkowej
+    /// X - automatyczne z ruchem nogi po paraboli
+    /// A - 
+    /// B - 
 
     initscr();
     cbreak();

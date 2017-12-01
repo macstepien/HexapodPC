@@ -17,6 +17,8 @@ set(OpenCV_LIBS
 	opencv_world
 	opencv_contrib_world
 	pthread
+	curses
+	udev
 )
 
 set(SOURCES
@@ -32,6 +34,7 @@ set(SOURCES
 	src/GUI/gui.h src/GUI/gui.cpp
 	src/GUI/viewer.h src/GUI/viewer.cpp
 	src/GUI/perspectiveprojection.h src/GUI/perspectiveprojection.cpp
+	src/Gamepad/gamepad.h src/Gamepad/gamepad.c
 
 	src/TCP/tcpconnector.h src/TCP/tcpconnector.cpp
 	src/TCP/tcpacceptor.h src/TCP/tcpacceptor.cpp
