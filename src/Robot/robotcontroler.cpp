@@ -10,13 +10,17 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
 {
 	walkStep = walkStep1;
 	rotStep = rotStep1;
+
 	sMoveStep = sMoveStep1;
 	sRotStep = sRotStep1;
+
 	defaultRobotPosition = pos;
 	defaultRobotAngles = ang;
+
 	mode = 6;
-    started = false;
-    walkingDirection = 0;
+    
+    startedStepAhead = false;
+    directionStepAhead = 0;
 }
 
 void RobotControler::control(char key, GUI& view1)
@@ -75,7 +79,7 @@ void RobotControler::control(char key, GUI& view1)
             smoothWalking(key, view1);
             break;
         case 6:
-            if(!started)
+            if(!startedStepAhead)
             {
                 walkingStepAhead(key, 0, view1);
             }
@@ -95,13 +99,13 @@ void RobotControler::control(char key, GUI& view1)
     		break;
     }
 
-    if(started && (mode != 6))
+    if(startedStepAhead && (mode != 6))
     {
-        if(walkingDirection == 1)
+        if(directionStepAhead == 1)
             walkingStepAhead('w', 2, view1);
-        else if (walkingDirection == 2)
+        else if (directionStepAhead == 2)
             walkingStepAhead('s', 2, view1);
-        started = false;
+        startedStepAhead = false;
     }
 }
 
@@ -119,16 +123,16 @@ void RobotControler::walkingStepAhead(char direction, int stage, GUI& view1)
             
             walker.walkStepAhead(walkStep, stage, rob, view1);
 
-            walkingDirection = 1;
+            directionStepAhead = 1;
             
-            started = true;
+            startedStepAhead = true;
             break;
         case 's':
             
             walker.walkStepAhead(-walkStep, stage, rob, view1);
 
-            walkingDirection = 2;
-            started = true;
+            directionStepAhead = 2;
+            startedStepAhead = true;
             break;
         case 'e':
             walker.rotation(rotStep, rob, view1);

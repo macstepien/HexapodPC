@@ -23,8 +23,8 @@ class RobotControler
 
 		int mode;
 
-		bool started;
-		int walkingDirection;
+		bool startedStepAhead;
+		int directionStepAhead;
 
 
 	public:
