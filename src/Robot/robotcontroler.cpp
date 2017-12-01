@@ -23,7 +23,6 @@ RobotControler::RobotControler(float walkStep1, float rotStep1, float sMoveStep1
     directionStepAhead = 0;
 
     directionContinuous = 0;
-    startContinuous = false;
 }
 
 void RobotControler::control(char key, GUI& view1)

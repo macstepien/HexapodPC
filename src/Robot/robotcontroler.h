@@ -26,7 +26,6 @@ class RobotControler
 		bool startedStepAhead;
 		int directionStepAhead;
 
-		bool startContinuous;
 		int directionContinuous;
 
 
