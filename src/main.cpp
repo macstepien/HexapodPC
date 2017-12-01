@@ -10,6 +10,7 @@
 #include "TCP/tcpconnector.h"
 #include "GUI/gui.h"
 #include "Robot/robotcontroler.h"
+#include "GUI/gamepad.h"
 
 using namespace std;
 using namespace cv;
@@ -43,6 +44,75 @@ void battery(bool communication, char* adres, bool* end, voltage* v)
     }
 }
 
+static char getChar(){
+ 
+    float XX,YY;
+    GamepadStickNormXY((GAMEPAD_DEVICE)0, STICK_LEFT,&XX, &YY);
+    int x,y;
+    x=(int)XX;
+    y=(int)YY;
+    move(3,0);
+    printw("%f",XX);
+    move(4,0);
+    printw("%f",YY);
+    if ( XX == -1){
+        return 'a';
+    }
+    if ( XX == 1){
+        return 'd';
+    }
+    if ( YY == 1){
+        return 'w';
+    }
+    if ( YY == -1){
+        return 's';
+    }
+    GamepadStickNormXY((GAMEPAD_DEVICE)0, STICK_RIGHT,&XX, &YY);
+    x=(int)XX;
+    y=(int)YY;
+    move(3,0);
+    printw("%f",XX);
+    move(4,0);
+    printw("%f",YY);
+    if ( XX == -1){
+        return 'q';
+    }
+    if ( XX == 1){
+        return 'e';
+    }
+    bool button;
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )12);
+    if ( button == true){
+        return '1';
+    }
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )13);
+    if ( button == true ){
+        return '2';
+    }
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )5);
+    if ( button == true) {
+        return 'R';
+    }
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )14);
+    if ( button == true){
+        return '6';
+    }
+    button = GamepadButtonTriggered((GAMEPAD_DEVICE)0,  (GAMEPAD_BUTTON )15);
+    if ( button == true){
+        return '7';
+    }
+    // button = GamepadButtonDown((GAMEPAD_DEVICE)0, BUTTON_X);
+    // if ( button == 1){
+    //     return '6';
+    // }
+    // button = GamepadButtonDown((GAMEPAD_DEVICE)0, BUTTON_Y);
+    // if ( button == 1){
+    //     return '7';
+    // }
+    return 'm';
+ 
+}
+
 int main(int argc, char** argv)
 {
     bool usingTCP = true;
@@ -71,7 +141,8 @@ int main(int argc, char** argv)
 
     GUI view1(1000, Point3f(0,0,0), Point3f(0, -300, 0));
 
-    char key = 'm';
+    char keyPad = 'm';
+    char keyKeyboard = 'm';
 
     Point3f robotPosition(0, 17, 100);
     Point3f robotAngles(0,0,0);
@@ -98,11 +169,28 @@ int main(int argc, char** argv)
     ///6 - automatyczne bez wracania do pozycji początkowej
     ///8 - chodzenie do punktu
     ///9 - tryb pokazowy
+
+    initscr();
+    cbreak();
+    noecho();
+    timeout(1);
+    unsigned int microseconds;
+    microseconds = 100000;
+    GamepadInit();
         
-	while(key != 27)
+	while(keyKeyboard != 27)
     {
         
-        rob.control(key,view1);
+        GamepadUpdate();
+ 
+        if (!GamepadIsConnected((GAMEPAD_DEVICE)0)) {
+            printf("%d) n/a\n", (GAMEPAD_DEVICE)0);
+            return 0;
+        }
+ 
+        keyPad=getChar();
+
+        rob.control(keyPad,view1);
 
         if(usingTCP)
         {
@@ -110,14 +198,14 @@ int main(int argc, char** argv)
             view1.setVoltage(v.voltageStr);
         }
         
-        view1.update(key, rob.getRobot());
+        view1.update(keyKeyboard, rob.getRobot());
 
-        key = waitKey(10);
+        keyKeyboard = waitKey(10);
 
         if(usingTCP && stream)
-        	stream->send(&key,sizeof(key));
+        	stream->send(&keyPad,sizeof(keyPad));
 
-        if(key == '8')
+        /*if(key == '8')
         {
             Point pkt;
             cout << "Podaj wspolrzedne: ";
@@ -134,7 +222,7 @@ int main(int argc, char** argv)
                 p[2] = (pkt.y >> 8);
                 stream->send(p,sizeof(p));
             }
-        }
+        }*/
     }
 
     end = true;
