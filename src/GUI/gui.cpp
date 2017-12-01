@@ -65,40 +65,40 @@ void GUI::change(char key)
 {
     switch(key)
     {
-        case 'w':
+        case 'W':
             translateView(Point3f(0,-translationStep,0));
             break;
-        case 's':
+        case 'S':
             translateView(Point3f(0,translationStep,0));
             break;
-        case 'a':
+        case 'A':
             translateView(Point3f(-translationStep,0,0));
             break;
-        case 'd':
+        case 'D':
             translateView(Point3f(translationStep,0,0));
             break;
-        case 'q':
+        case 'Q':
             translateView(Point3f(0,0,translationStep));
             break;
-        case 'e':
+        case 'E':
             translateView(Point3f(0,0,-translationStep));
             break;
-        case 'r':
+        case 'R':
             rotateView(Point3f(rotationStep,0,0));
             break;
-        case 'f':
+        case 'F':
             rotateView(Point3f(-rotationStep,0,0));
             break;
-        case 't':
+        case 'T':
             rotateView(Point3f(0,rotationStep,0));
             break;
-        case 'g':
+        case 'G':
             rotateView(Point3f(0,-rotationStep,0));
             break;
-        case 'y':
+        case 'Y':
             rotateView(Point3f(0,0,rotationStep));
             break;
-        case 'h':
+        case 'H':
             rotateView(Point3f(0,0,-rotationStep));
             break;
     }
