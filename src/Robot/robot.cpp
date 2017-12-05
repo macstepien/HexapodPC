@@ -9,27 +9,16 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
 {
     width = width1;
     length = length1;
-
-    for(int i = 0; i < 6; ++i)
-    {
-        legs[i].setLengths(leglengths);
-    }
-
-    restart(pos, ang);
-}
-
-void Robot::restart(cv::Point3f pos, cv::Point3f ang)
-{
+    initPosition = position;
+    initAngles = angles;
     position = pos;
     angles = ang;
     position.y = -position.y;
-    initPosition = position;
-    initAngles = angles;
 
     lFrame.dl = Point3f(-width/2,0,-length/2);
-    lFrame.dr = Point3f(width/2,0,-length/2);
-    lFrame.ul = Point3f(-width/2,0,length/2);
-    lFrame.ur = Point3f(width/2,0,length/2);
+    lFrame.dr = Point3f( width/2,0,-length/2);
+    lFrame.ul = Point3f(-width/2,0, length/2);
+    lFrame.ur = Point3f( width/2,0, length/2);
 
     for(int i = 3; i < 6; ++i)
         legs[i].setR((Mat_<float>(3,3) << -1, 0, 0, 0, 1, 0, 0, 0, -1));
@@ -64,9 +53,20 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
 
     for(int i = 0; i < 6; ++i)
     {
+        legs[i].setLengths(leglengths);
         legs[i].setAngles(ang1);
         legs[i].initJointPoints();
     }
+}
+
+void Robot::restart(cv::Point3f pos, cv::Point3f ang)
+{
+    position = pos;
+    angles = ang;
+    position.y = -position.y;
+    
+    for(int i = 0; i < 6; ++i)
+        legs[i].restart();
 }
 
 joints Robot::getLegJoints(int n)
@@ -104,16 +104,13 @@ void Robot::moveCoordinates(Point3f p, Point3f ang)
 
     ang = -ang;
 
-    joints x;
-
-    Mat P1, P11;
+    Point3f t;
 
     for(int i = 0; i < 6; ++i)
     {
-        x = legs[i].getJoints();
-        x.D = rotate3D(x.D, ang) - p;
-        legs[i].setLegEnd(x.D);
-        legs[i].calculateAngles();
+        t = legs[i].getJoints().D;
+        t = rotate3D(t, ang) - p;
+        legs[i].moveLeg(t-legs[i].getJoints().D);
     }
 
     p = rotate3D(p, angles);
@@ -124,27 +121,14 @@ void Robot::moveCoordinates(Point3f p, Point3f ang)
 void Robot::move(Point3f p)
 {
     moveCoordinates(p, Point3f(0,0,0));
-
-    for(int i = 0; i < 6; ++i)
-    {
-        if(legs[i].calculateAngles() == -1)
-            this->move(-p);
-    }
 }
 
 void Robot::rotate(Point3f ang)
 {
     moveCoordinates(Point3f(0,0,0), ang);
-
-    for(int i = 0; i < 6; ++i)
-    {
-        if(legs[i].calculateAngles() == -1)
-            this->rotate(-ang);
-    }
 }
 
 void Robot::moveLeg(int n, cv::Point3f p)
 {
-    legs[n].setLegEnd(legs[n].getJoints().D+p);
-    legs[n].calculateAngles();
+    legs[n].moveLeg(p);
 }

@@ -1,21 +1,32 @@
 #include "Robot/leg.h"
+#include "Robot/inversekinematics.h"
 
 using namespace cv;
 
-Leg::Leg(Point3f joint1, Point3f angles1, Point3f lengths1, cv::Point3f signals1)
+Leg::Leg(Point3f joint1, Point3f angles1, Point3f lengths1, cv::Point3i servos1, cv::Point3f signals1)
 {
     legJoints.A = joint1;
     angles = angles1;
     lengths = lengths1;
+    servos = servos1;
     signals = signals1;
+    initJointPoints();
 }
 
 void Leg::initJointPoints()
 {
-    calculateJointPoints();
-    legEnd = legJoints.D;
     initAngles = angles;
-    calculateAngles();
+
+    calculateJointPoints();
+    calculateServoSignals();
+}
+
+void Leg::restart()
+{
+    angles = initAngles;
+
+    calculateJointPoints();
+    calculateServoSignals();
 }
 
 void Leg::calculateJointPoints()
@@ -39,50 +50,34 @@ void Leg::calculateJointPoints()
     legJoints.D = Point3f(P33.at<float>(0,0), P33.at<float>(0,1), P33.at<float>(0,2)) + legJoints.C;
 }
 
-int Leg::calculateAngles()
+void Leg::moveLeg(cv::Point3f t)
 {
-    Point3f newPos = legEnd-legJoints.A; // pozycja poczatku nogi po przekszta³ceniu
+    legJoints.D += t;
+    Point3f desiredPosition = legJoints.D - legJoints.A;
+    angles = InverseKinematics::calculate(desiredPosition, lengths);
 
-    float lx = lengths.x;
+    calculateJointPoints();
 
-    float L = sqrt(pow(newPos.x,2)+pow(newPos.z,2));
-    float iksw = sqrt(pow((L-lx),2)+pow(newPos.y,2));
+    calculateServoSignals();
 
-    float a1 = atan((L-lx)/newPos.y);
-    float a2 = acos((pow(lengths.z,2)-pow(lengths.y,2)-pow(iksw,2))/((-2.)*iksw*lengths.y));
-    float b = acos((pow(iksw,2)-pow(lengths.y,2)-pow(lengths.z,2))/((-2.)*lengths.y*lengths.z));
-
-    if(newPos.x && newPos.z)
-        angles.x = -atan(newPos.z/newPos.x);
-    else
-        angles.x = 0;
-
-    angles.y = -(a1+a2-0.5*CV_PI);
-    angles.z = (CV_PI - b + angles.y);
-
-    relAngles.x = angles.x;
-    relAngles.y = angles.y;
-    relAngles.z = b;
-
-    if(angles.x != angles.x || angles.y != angles.y || angles.z!=angles.z)//nan detect
+    /*if(angles.x != angles.x || angles.y != angles.y || angles.z!=angles.z)//nan detect
     {
         calculateJointPoints();
         return -1;
-    }
-
-    calculateJointPoints();
-    calculateServoSignals();
-
-    return 1;
+    }*/
 }
 
 void Leg::calculateServoSignals()
 {
+    Point3f relativeAngles = angles;
+    relativeAngles.z = (CV_PI - angles.z + angles.y);
+  
     float wspolczynnik = 1000/(CV_PI/2 - 1.18);
+
     int sygnalA, sygnalB, sygnalC;
-    sygnalA = relAngles.x*wspolczynnik + signals.x;
-    sygnalB = -relAngles.y*wspolczynnik + signals.y;
-    sygnalC = (CV_PI/2 -relAngles.z)*wspolczynnik + signals.z;
+    sygnalA = relativeAngles.x*wspolczynnik + signals.x;
+    sygnalB = -relativeAngles.y*wspolczynnik + signals.y;
+    sygnalC = (CV_PI/2 -relativeAngles.z)*wspolczynnik + signals.z;
 
     /*device->setTarget(servos.x, sygnalA);
     device->setTarget(servos.y, sygnalB);
