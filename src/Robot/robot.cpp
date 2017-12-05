@@ -76,52 +76,24 @@ joints Robot::getLegJoints(int n)
 
     joints x = legs[n].getJoints();
 
-    Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(angles.x), -sin(angles.x), 0, sin(angles.x), cos(angles.x));
-    Ry = (Mat_<float>(3,3) << cos(angles.y), 0, sin(angles.y), 0, 1, 0, -sin(angles.y), 0, cos(angles.y));
-    Rz = (Mat_<float>(3,3) << cos(angles.z), -sin(angles.z), 0, sin(angles.z), cos(angles.z), 0, 0, 0, 1);
+    ///Przekształcanie zgięć przedstawianych domyślnie w lokalnych układach współrzędnych na globalne układy współrzędnych
 
-    R = Rz*Ry*Rx;
-
-    Mat P1 = (Mat_<float>(3,1) << x.A.x, x.A.y, x.A.z);
-    Mat P2 = (Mat_<float>(3,1) << x.B.x, x.B.y, x.B.z);
-    Mat P3 = (Mat_<float>(3,1) << x.C.x, x.C.y, x.C.z);
-    Mat P4 = (Mat_<float>(3,1) << x.D.x, x.D.y, x.D.z);
-
-    Mat P11 = R*P1;
-    Mat P22 = R*P2;
-    Mat P33 = R*P3;
-    Mat P44 = R*P4;
-
-    x.A = Point3f(P11.at<float>(0,0), P11.at<float>(0,1), P11.at<float>(0,2)) + position;
-    x.B = Point3f(P22.at<float>(0,0), P22.at<float>(0,1), P22.at<float>(0,2)) + position;
-    x.C = Point3f(P33.at<float>(0,0), P33.at<float>(0,1), P33.at<float>(0,2)) + position;
-    x.D = Point3f(P44.at<float>(0,0), P44.at<float>(0,1), P44.at<float>(0,2)) + position;
+    x.A = rotate3D(x.A, angles) + position;
+    x.B = rotate3D(x.B, angles) + position;
+    x.C = rotate3D(x.C, angles) + position;
+    x.D = rotate3D(x.D, angles) + position;
 
     return x;
 }
 
 rect Robot::getFrame()
 {
-    Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(angles.x), -sin(angles.x), 0, sin(angles.x), cos(angles.x));
-    Ry = (Mat_<float>(3,3) << cos(angles.y), 0, sin(angles.y), 0, 1, 0, -sin(angles.y), 0, cos(angles.y));
-    Rz = (Mat_<float>(3,3) << cos(angles.z), -sin(angles.z), 0, sin(angles.z), cos(angles.z), 0, 0, 0, 1);
+    ///Przekształcanie rogów podstawy robota przedstawianych domyślnie w lokalnym układadzie współrzędnych na globalny układ współrzędnych
 
-    R = Rz*Ry*Rx;
-
-    Mat P1 = (Mat_<float>(3,1) << - width/2, 0, - length/2);
-    Mat P2 = (Mat_<float>(3,1) << width/2, 0, - length/2);
-    Mat P3 = (Mat_<float>(3,1) << - width/2, 0, length/2);
-    Mat P4 = (Mat_<float>(3,1) << width/2, 0, length/2);
-
-    Mat P11 = R*P1;
-    Mat P22 = R*P2;
-    Mat P33 = R*P3;
-    Mat P44 = R*P4;
-
-    gFrame.dl = Point3f(P11.at<float>(0,0), P11.at<float>(0,1), P11.at<float>(0,2)) + position;
-    gFrame.dr = Point3f(P22.at<float>(0,0), P22.at<float>(0,1), P22.at<float>(0,2)) + position;
-    gFrame.ul = Point3f(P33.at<float>(0,0), P33.at<float>(0,1), P33.at<float>(0,2)) + position;
-    gFrame.ur = Point3f(P44.at<float>(0,0), P44.at<float>(0,1), P44.at<float>(0,2)) + position;
+    gFrame.dl = rotate3D(Point3f(-width/2, 0, -length/2), angles) + position;
+    gFrame.dr = rotate3D(Point3f(width/2, 0, -length/2), angles) + position;
+    gFrame.ul = rotate3D(Point3f(-width/2, 0, length/2), angles) + position;
+    gFrame.ur = rotate3D(Point3f(width/2, 0, length/2), angles) + position;
 
     return gFrame;
 }
@@ -132,13 +104,6 @@ void Robot::moveCoordinates(Point3f p, Point3f ang)
 
     ang = -ang;
 
-
-    Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(ang.x), -sin(ang.x), 0, sin(ang.x), cos(ang.x));
-    Ry = (Mat_<float>(3,3) << cos(ang.y), 0, sin(ang.y), 0, 1, 0, -sin(ang.y), 0, cos(ang.y));
-    Rz = (Mat_<float>(3,3) << cos(ang.z), -sin(ang.z), 0, sin(ang.z), cos(ang.z), 0, 0, 0, 1);
-
-    R = Rz*Ry*Rx;
-
     joints x;
 
     Mat P1, P11;
@@ -146,20 +111,13 @@ void Robot::moveCoordinates(Point3f p, Point3f ang)
     for(int i = 0; i < 6; ++i)
     {
         x = legs[i].getJoints();
-        P1 = (Mat_<float>(3,1) << x.D.x, x.D.y, x.D.z);
-        P11 = R*P1;
-        x.D = Point3f(P11.at<float>(0,0), P11.at<float>(0,1), P11.at<float>(0,2)) - p;
+        x.D = rotate3D(x.D, ang) - p;
         legs[i].setLegEnd(x.D);
         legs[i].calculateAngles();
     }
-    Rx = (Mat_<float>(3,3) << 1, 0, 0, 0, cos(angles.x), -sin(angles.x), 0, sin(angles.x), cos(angles.x));
-    Ry = (Mat_<float>(3,3) << cos(angles.y), 0, sin(angles.y), 0, 1, 0, -sin(angles.y), 0, cos(angles.y));
-    Rz = (Mat_<float>(3,3) << cos(angles.z), -sin(angles.z), 0, sin(angles.z), cos(angles.z), 0, 0, 0, 1);
 
-    R = Rz*Ry*Rx;
-    P1 = (Mat_<float>(3,1) << p.x, p.y, p.z);
-    P11 = R*P1;
-    p = Point3f(P11.at<float>(0,0), P11.at<float>(0,1), P11.at<float>(0,2));
+    p = rotate3D(p, angles);
+
     position += p;
 }
 
