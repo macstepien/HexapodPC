@@ -10,7 +10,7 @@ class Servo
 		
 	public:
 		Servo(int servoNumber1 = 0, int middleSignal1 = 5000);
-		void setServo(float angle);
+		void moveServo(float angle);
 };
 
 #endif

@@ -8,7 +8,7 @@ Servo::Servo(int servoNumber1, int middleSignal1)
 	rate = 1000/(CV_PI/2 - 1.18);
 }
 
-void Servo::setServo(float angle)
+void Servo::moveServo(float angle)
 {
 	int signal = angle*rate + middleSignal;
 	//device->setTarget(servoNumber, signal);

@@ -82,18 +82,7 @@ void Leg::sendServoSignals()
     relativeAngles.y = -angles.y;
     relativeAngles.z = CV_PI/2 - (CV_PI - angles.z + angles.y);
   
-    servos[0].setServo(relativeAngles.x);
-    servos[1].setServo(relativeAngles.y);
-    servos[2].setServo(relativeAngles.z);
-
-    /*float wspolczynnik = 1000/(CV_PI/2 - 1.18);
-
-    int sygnalA, sygnalB, sygnalC;
-    sygnalA = relativeAngles.x*wspolczynnik + signals.x;
-    sygnalB = -relativeAngles.y*wspolczynnik + signals.y;
-    sygnalC = (CV_PI/2 -relativeAngles.z)*wspolczynnik + signals.z;*/
-
-    /*device->setTarget(servos.x, sygnalA);
-    device->setTarget(servos.y, sygnalB);
-    device->setTarget(servos.z, sygnalC);*/
+    servos[0].moveServo(relativeAngles.x);
+    servos[1].moveServo(relativeAngles.y);
+    servos[2].moveServo(relativeAngles.z);
 }
