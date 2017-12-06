@@ -8,17 +8,18 @@ Leg::Leg(Point3f joint1, Point3f angles1, Point3f lengths1, cv::Point3i servos1,
     legJoints.A = joint1;
     angles = angles1;
     lengths = lengths1;
-    servos = servos1;
-    signals = signals1;
-    initJointPoints();
+
+    setServos(servos1, signals1);
+
+    initialize();
 }
 
-void Leg::initJointPoints()
+void Leg::initialize()
 {
     initAngles = angles;
 
     calculateJointPoints();
-    calculateServoSignals();
+    sendServoSignals();
 }
 
 void Leg::restart()
@@ -26,7 +27,14 @@ void Leg::restart()
     angles = initAngles;
 
     calculateJointPoints();
-    calculateServoSignals();
+    sendServoSignals();
+}
+
+void Leg::setServos(cv::Point3i servos1, cv::Point3f signals1)
+{
+    servos[0] = Servo(servos1.x, signals1.x);
+    servos[1] = Servo(servos1.y, signals1.y);
+    servos[2] = Servo(servos1.z, signals1.z);
 }
 
 void Leg::calculateJointPoints()
@@ -58,7 +66,7 @@ void Leg::moveLeg(cv::Point3f t)
 
     calculateJointPoints();
 
-    calculateServoSignals();
+    sendServoSignals();
 
     /*if(angles.x != angles.x || angles.y != angles.y || angles.z!=angles.z)//nan detect
     {
@@ -67,17 +75,23 @@ void Leg::moveLeg(cv::Point3f t)
     }*/
 }
 
-void Leg::calculateServoSignals()
+void Leg::sendServoSignals()
 {
-    Point3f relativeAngles = angles;
-    relativeAngles.z = (CV_PI - angles.z + angles.y);
+    Point3f relativeAngles;
+    relativeAngles.x = angles.x;
+    relativeAngles.y = -angles.y;
+    relativeAngles.z = CV_PI/2 - (CV_PI - angles.z + angles.y);
   
-    float wspolczynnik = 1000/(CV_PI/2 - 1.18);
+    servos[0].setServo(relativeAngles.x);
+    servos[1].setServo(relativeAngles.y);
+    servos[2].setServo(relativeAngles.z);
+
+    /*float wspolczynnik = 1000/(CV_PI/2 - 1.18);
 
     int sygnalA, sygnalB, sygnalC;
     sygnalA = relativeAngles.x*wspolczynnik + signals.x;
     sygnalB = -relativeAngles.y*wspolczynnik + signals.y;
-    sygnalC = (CV_PI/2 -relativeAngles.z)*wspolczynnik + signals.z;
+    sygnalC = (CV_PI/2 -relativeAngles.z)*wspolczynnik + signals.z;*/
 
     /*device->setTarget(servos.x, sygnalA);
     device->setTarget(servos.y, sygnalB);

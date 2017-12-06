@@ -24,6 +24,7 @@ set(SOURCES
 	src/main.cpp
 
 	src/Robot/leg.h src/Robot/leg.cpp
+	src/Robot/servo.h src/Robot/servo.cpp
 	src/Robot/inversekinematics.h src/Robot/inversekinematics.cpp
 	src/Robot/robot.h src/Robot/robot.cpp
 	src/Robot/robotwalk.h src/Robot/robotwalk.cpp

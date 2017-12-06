@@ -7,6 +7,7 @@
 
 #include <opencv2/core/core.hpp>
 #include "util.h"
+#include "Robot/servo.h"
 
 class Leg
 {
@@ -17,29 +18,26 @@ class Leg
         cv::Point3f lengths;//dlugosci poszczegolnych czesci nog x-AB y-BC z-CD
         cv::Mat R; //macierz obrotu tak aby obrócić część nóg o 180 stopni
 
-        cv::Point3f signals;
-        cv::Point3i servos;
+        Servo servos[3];
 
-        //calculate joint points B, C, D relative to given point A with information about lentghs of leg parts and angles between them
-        void calculateJointPoints();
-        void calculateServoSignals();
+        void calculateJointPoints(); //calculate joint points B, C, D relative to given point A with information about lentghs of leg parts and angles between them
+        void sendServoSignals();
     public:
         Leg(){};
         Leg(cv::Point3f joint1, cv::Point3f angles1, cv::Point3f lengths1, cv::Point3i servos1, cv::Point3f signals1);
 
         joints getJoints() const {return legJoints;};
 
-        void initJointPoints();
+        void initialize();
 
         void setJointA(cv::Point3f joint1) {legJoints.A = joint1;};
         void setAngles(cv::Point3f angles1) {angles = angles1;};
         void setLengths(cv::Point3f lengths1) {lengths = lengths1;};
         void setR(cv::Mat R1) {R = R1;};
-        void setSignals(cv::Point3f sig) {signals = sig;};
-        void setServos(cv::Point3i servos1) {servos = servos1;};
+        
+        void setServos(cv::Point3i servos1, cv::Point3f signals1);
 
-        //brings angles back to initial values
-        void restart();
+        void restart(); //brings angles back to initial values
 
         void moveLeg(cv::Point3f t);
 };
