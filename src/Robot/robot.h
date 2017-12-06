@@ -8,7 +8,7 @@
 class Robot
 {
     private:
-        rect lFrame, gFrame;// l - lokalne g - globalne
+        rect frame;// robots base
 
         //position and angles of middles point in robots base
         cv::Point3f position; 
@@ -31,9 +31,9 @@ class Robot
 
         cv::Point3f getPosition() const {return position;};
         cv::Point3f getAngles() const {return angles;};
-        rect getFrame();
-        joints getLegJoints(int n);
         Leg getLeg(int n) const {return legs[n];}
+        joints getLegJoints(int n) const;
+        rect getFrame() const;
 
         void restart(cv::Point3f pos, cv::Point3f ang); // restart robot to its base position
 

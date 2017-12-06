@@ -15,10 +15,10 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
     angles = ang;
     position.y = -position.y;
 
-    lFrame.dl = Point3f(-width/2,0,-length/2);
-    lFrame.dr = Point3f( width/2,0,-length/2);
-    lFrame.ul = Point3f(-width/2,0, length/2);
-    lFrame.ur = Point3f( width/2,0, length/2);
+    frame.dl = Point3f(-width/2,0,-length/2);
+    frame.dr = Point3f( width/2,0,-length/2);
+    frame.ul = Point3f(-width/2,0, length/2);
+    frame.ur = Point3f( width/2,0, length/2);
 
     for(int i = 3; i < 6; ++i)
         legs[i].setR((Mat_<float>(3,3) << -1, 0, 0, 0, 1, 0, 0, 0, -1));
@@ -27,22 +27,22 @@ Robot::Robot(cv::Point3f pos, cv::Point3f ang, float width1, float length1, cv::
 
     Point3f ang1(0.0 ,0.0 ,CV_PI/2);
 
-    legs[0].setJointA(lFrame.ur);
+    legs[0].setJointA(frame.ur);
     legs[0].setServos(Point3i(3,4,5), Point3i(5900,5140,4960));
 
-    legs[1].setJointA((lFrame.ur+lFrame.dr)/2);
+    legs[1].setJointA((frame.ur+frame.dr)/2);
     legs[1].setServos(Point3i(9,10,11), Point3i(5900,5200,5020));
 
-    legs[2].setJointA(lFrame.dr);
+    legs[2].setJointA(frame.dr);
     legs[2].setServos(Point3i(15,16,17), Point3i(6160,5080,5160));
 
-    legs[3].setJointA(lFrame.ul);
+    legs[3].setJointA(frame.ul);
     legs[3].setServos(Point3i(0,1,2), Point3i(6080,5320,4700));
 
-    legs[4].setJointA((lFrame.ul+lFrame.dl)/2);
+    legs[4].setJointA((frame.ul+frame.dl)/2);
     legs[4].setServos(Point3i(6,7,8), Point3i(6100,4820,5020));
 
-    legs[5].setJointA(lFrame.dl);
+    legs[5].setJointA(frame.dl);
     legs[5].setServos(Point3i(12,13,14), Point3i(6100,5080,4920));
 
     for(int i = 0; i < 6; ++i)
@@ -63,7 +63,7 @@ void Robot::restart(cv::Point3f pos, cv::Point3f ang)
         legs[i].restart();
 }
 
-joints Robot::getLegJoints(int n)
+joints Robot::getLegJoints(int n) const
 {
     if(!(n>=0 && n<=5))
         return joints();
@@ -80,14 +80,16 @@ joints Robot::getLegJoints(int n)
     return x;
 }
 
-rect Robot::getFrame()
+rect Robot::getFrame() const
 {
     ///Przekształcanie rogów podstawy robota przedstawianych domyślnie w lokalnym układadzie współrzędnych na globalny układ współrzędnych
 
-    gFrame.dl = rotate3D(Point3f(-width/2, 0, -length/2), angles) + position;
-    gFrame.dr = rotate3D(Point3f(width/2, 0, -length/2), angles) + position;
-    gFrame.ul = rotate3D(Point3f(-width/2, 0, length/2), angles) + position;
-    gFrame.ur = rotate3D(Point3f(width/2, 0, length/2), angles) + position;
+    rect gFrame;
+    
+    gFrame.dl = rotate3D(frame.dl, angles) + position;
+    gFrame.dr = rotate3D(frame.dr, angles) + position;
+    gFrame.ul = rotate3D(frame.ul, angles) + position;
+    gFrame.ur = rotate3D(frame.ur, angles) + position;
 
     return gFrame;
 }
